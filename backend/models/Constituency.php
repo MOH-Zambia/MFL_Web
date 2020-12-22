@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use dosamigos\google\maps\LatLng;
+
 /**
  * This is the model class for table "geography_constituency".
  *
@@ -21,7 +22,9 @@ use dosamigos\google\maps\LatLng;
  * @property GeographyWard[] $geographyWards
  */
 class Constituency extends \yii\db\ActiveRecord {
- public $province_id;
+
+    public $province_id;
+
     /**
      * {@inheritdoc}
      */
@@ -34,20 +37,16 @@ class Constituency extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['name', 'geom'], 'required'],
+            [['name', 'geom','district_id'], 'required'],
             [['population', 'pop_density', 'area_sq_km'], 'number'],
             [['geom'], 'string'],
-              [['province_id'], 'safe'],
+            [['province_id'], 'safe'],
             [['district_id'], 'default', 'value' => null],
             [['district_id'], 'integer'],
             [['name'], 'string', 'max' => 50],
-            /*['name', 'unique', 'when' => function($model) {
-                    return $model->isAttributeChanged('name') &&
-                            empty($model->province_id) ? TRUE : FALSE;
-                }, 'message' => 'Constituency name already exist!'],*/
             ['name', 'unique', 'when' => function($model) {
-                    return $model->isAttributeChanged('name') && !empty(self::findOne(['name' => $model->name, "province_id" => $model->province_id])) ? TRUE : FALSE;
-                }, 'message' => 'Constituency name already exist for this province!'],
+                    return $model->isAttributeChanged('name') && !empty(self::findOne(['name' => $model->name, "district_id" => $model->district_id])) ? TRUE : FALSE;
+                }, 'message' => 'Constituency name already exist for this district!'],
             [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => Districts::className(), 'targetAttribute' => ['district_id' => 'id']],
         ];
     }
@@ -64,6 +63,7 @@ class Constituency extends \yii\db\ActiveRecord {
             'area_sq_km' => 'Area Sq Km',
             'geom' => 'Geometry Coordinates',
             'district_id' => 'District',
+            'province_id' => "Province"
         ];
     }
 

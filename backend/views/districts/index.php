@@ -47,11 +47,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['prompt' => 'Filter by Province', 'class' => 'form-control', 'id' => null],
                 'editableOptions' => [
                     'asPopover' => true,
-                    'type' => 'success',
+                    'type' => 'primary',
                     'size' => PopoverX::SIZE_MEDIUM,
-                    'options' => ['class' => 'form-control', 'prompt' => 'Select province', 'custom' => true,],
-                    'inputType' => Editable::INPUT_DROPDOWN_LIST,
-                    'data' => \backend\models\Provinces::getProvinceList(),
+                    'options' => ['data' => \backend\models\Provinces::getProvinceList(),],
+                    'inputType' => Editable::INPUT_SELECT2,
+                    
                 ],
                 'value' => function ($model) {
                     $name = backend\models\Provinces::findOne($model->province_id)->name;
@@ -71,11 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['prompt' => 'Filter by Type', 'class' => 'form-control', 'id' => null],
                 'editableOptions' => [
                     'asPopover' => true,
-                    'type' => 'success',
+                    'type' => 'primary',
                     'size' => PopoverX::SIZE_MEDIUM,
-                    'options' => ['class' => 'form-control', 'prompt' => 'Select type', 'custom' => true,],
-                    'inputType' => Editable::INPUT_DROPDOWN_LIST,
-                    'data' => \backend\models\DistrictType::getList(),
+                    'options' => ['data' => \backend\models\DistrictType::getList(),],
+                    'inputType' => Editable::INPUT_SELECT2,
+                    
                 ],
                 'value' => function ($model) {
                     $name = backend\models\DistrictType::findOne($model->district_type_id)->name;

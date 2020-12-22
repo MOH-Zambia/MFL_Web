@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $coords = [];
                 $center_coords = [];
                 if (empty($model->geom)) {
-                    echo "<div class='alert alert-warning'>There are no polygon coordinates for province</div>";
+                    echo "<div class='alert alert-warning'>There are no polygon coordinates for district</div>";
                 } else {
                     $coords = \backend\models\Districts::getCoordinates(json_decode($model->geom, true)['coordinates']);
                     $coord = json_decode($model->geom, true)['coordinates'][0][0];

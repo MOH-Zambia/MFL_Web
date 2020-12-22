@@ -52,6 +52,18 @@ class ConstituenciesController extends Controller {
             $model = new Constituency();
             $searchModel = new ConstituencySearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            if (!empty(Yii::$app->request->queryParams['ConstituencySearch']['province_id'])) {
+                $district_ids = [];
+                $districts = \backend\models\Districts::find()->where(['province_id' => Yii::$app->request->queryParams['ConstituencySearch']['province_id']])->all();
+                if (!empty($districts)) {
+                    foreach ($districts as $id) {
+                        array_push($district_ids, $id['id']);
+                    }
+                }
+
+                $dataProvider->query->andFilterWhere(['IN', 'district_id', $district_ids]);
+            }
+
             if (Yii::$app->request->post('hasEditable')) {
                 $Id = Yii::$app->request->post('editableKey');
                 $model = Constituency::findOne($Id);
@@ -78,7 +90,7 @@ class ConstituenciesController extends Controller {
                     if ($old_area_sq_km != $model->area_sq_km) {
                         $action = "updated " . $model->name . " Constituency area from $old_area_sq_km sq kilometer to " . $model->area_sq_km . " sq kilometer";
                     }
-                    if ($old_district_type != $model->district_type_id) {
+                    if ($old_district != $model->district_id) {
                         $action = "updated " . $model->name . " Constituency district from " . \backend\models\Districts::findOne($old_district)->name . " to " . \backend\models\Districts::findOne($model->district_id)->name;
                     }
 
@@ -139,7 +151,6 @@ class ConstituenciesController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-
     public function actionCreate() {
         if (User::userIsAllowedTo('Manage constituencies')) {
             $model = new Constituency();
@@ -169,7 +180,6 @@ class ConstituenciesController extends Controller {
         }
     }
 
-
     /**
      * Deletes an existing Constituency model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -177,7 +187,7 @@ class ConstituenciesController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-  public function actionDelete($id) {
+    public function actionDelete($id) {
         if (User::userIsAllowedTo('Remove constituencies')) {
             $model = $this->findModel($id);
             $name = $model->name;
@@ -213,6 +223,68 @@ class ConstituenciesController extends Controller {
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionDistrict() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            //  Yii::warning('**********************', var_export($_POST['depdrop_parents'],true));
+            //   $parents = $_POST['depdrop_all_params']['parent_id'];
+            $selected_id = $_POST['depdrop_params'];
+            if ($parents != null) {
+                $prov_id = $parents[0];
+                $out = \backend\models\Districts::find()
+                        ->select(['id', 'name'])
+                        ->where(['province_id' => $prov_id])
+                        ->asArray()
+                        ->all();
+
+                return ['output' => $out, 'selected' => $selected_id[0]];
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public function actionConstituency() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            $selected_id = $_POST['depdrop_all_params']['selected_id2'];
+            if ($parents != null) {
+                $dist_id = $parents[0];
+                $out = \backend\models\Constituency::find()
+                        ->select(['id', 'name'])
+                        ->where(['district_id' => $dist_id])
+                        ->asArray()
+                        ->all();
+
+                return ['output' => $out, 'selected' => $selected_id];
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public function actionWard() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            $selected_id = $_POST['depdrop_all_params']['selected_id3'];
+            if ($parents != null) {
+                $dist_id = $parents[0];
+                $out = \backend\models\Wards::find()
+                        ->select(['id', 'name'])
+                        ->where(['district_id' => $dist_id])
+                        ->asArray()
+                        ->all();
+
+                return ['output' => $out, 'selected' => $selected_id];
+            }
+        }
+        return ['output' => '', 'selected' => ''];
     }
 
 }

@@ -18,7 +18,7 @@ class ConstituencySearch extends Constituency
     {
         return [
             [['id', 'district_id'], 'integer'],
-            [['name', 'geom'], 'safe'],
+            [['name', 'geom','province_id'], 'safe'],
             [['population', 'pop_density', 'area_sq_km'], 'number'],
         ];
     }
@@ -67,7 +67,7 @@ class ConstituencySearch extends Constituency
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])
-            ->andFilterWhere(['ilike', 'geom', $this->geom]);
+            ->andFilterWhere(['like', 'geom', $this->geom]);
 
         return $dataProvider;
     }

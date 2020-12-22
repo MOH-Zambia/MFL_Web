@@ -27,7 +27,7 @@ $this->title = $name;
 
                 <p>
                     We could not find the page you were looking for.
-                    Meanwhile, you may <a href="'.Url::to('@web/site/home').'">return to dashboard</a>.
+                    Meanwhile, you may <a href="'.Url::to('@web/home/home').'">return to dashboard</a>.
                 </p>
             </div>';
             } else {
@@ -37,7 +37,7 @@ $this->title = $name;
 
           <p>
             We will work on fixing that right away.
-            Meanwhile, you may <a href="'.Url::to('@web/site/home').'">return to dashboard</a>.
+            Meanwhile, you may <a href="'.Url::to('@web/home/home').'">return to dashboard</a>.
           </p>';
             }
             ?>

@@ -10,6 +10,8 @@ use backend\models\User;
 use kartik\number\NumberControl;
 use kartik\popover\PopoverX;
 use kartik\export\ExportMenu;
+use kartik\depdrop\DepDrop;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ConstituencySearch */
@@ -23,18 +25,33 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <p>
             <?php
-            if (User::userIsAllowedTo('Manage districts')) {
+            if (User::userIsAllowedTo('Manage constituencies')) {
                 echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
-                    return false;"><i class="fa fa-plus"></i> Add District</button>';
+                    return false;"><i class="fa fa-plus"></i> Add Constituency</button>';
                 echo '<hr class="dotted short">';
             }
             ?>
         </p>
 
-           <?php
+        <?php
         $gridColumns = [
             ['class' => 'yii\grid\SerialColumn'],
             // 'id',
+            [
+                'attribute' => 'province_id',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filter' => true,
+                'filter' => \backend\models\Provinces::getProvinceList(),
+                'filterInputOptions' => ['prompt' => 'Filter by Province', 'class' => 'form-control', 'id' => null],
+                'value' => function ($model) {
+                    $province_id = backend\models\Districts::findOne($model->district_id)->province_id;
+                    $name = backend\models\Provinces::findOne($province_id)->name;
+                    return $name;
+                },
+            ],
             [
                 'class' => EditableColumn::className(),
                 'attribute' => 'district_id',
@@ -48,11 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
                 'editableOptions' => [
                     'asPopover' => true,
-                    'type' => 'success',
+                    'type' => 'primary',
                     'size' => PopoverX::SIZE_MEDIUM,
-                    'options' => ['class' => 'form-control', 'prompt' => 'Select district', 'custom' => true,],
-                    'inputType' => Editable::INPUT_DROPDOWN_LIST,
-                    'data' => \backend\models\Districts::getList(),
+                    'options' => ['data' => \backend\models\Districts::getList(),],
+                    'inputType' => Editable::INPUT_SELECT2,
+                   
                 ],
                 'value' => function ($model) {
                     $name = backend\models\Districts::findOne($model->district_id)->name;
@@ -139,7 +156,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'data-placement' => 'top',
                                         'data' => [
                                             'confirm' => 'Are you sure you want to remove ' . $model->name . ' constituency?<br>'
-                                            . 'constituency will only be removed if its not being used by the system!',
+                                            . 'Constituency will only be removed if its not being used by the system!',
                                             'method' => 'post',
                                         ],
                                         'style' => "padding:5px;",
@@ -172,7 +189,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'export' => [
                 'showConfirmAlert' => false,
                 'target' => GridView::TARGET_BLANK,
-                'filename' => 'districts' . date("YmdHis")
+                'filename' => 'constituencies' . date("YmdHis")
             ],
             //'bordered' => true,
             //'striped' => true,
@@ -195,7 +212,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add new District</h5>
+                <h5 class="modal-title">Add new Constituency</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -208,17 +225,25 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'action' => 'create',
                                 ])
                         ?>
-                        <?=
-                                $form->field($model, 'district_id')
+                        <?php
+                        echo
+                                $form->field($model, 'province_id')
                                 ->dropDownList(
-                                        \backend\models\Provinces::getProvinceList(), ['id' => 'prov_id', 'custom' => true, 'prompt' => 'Select a province', 'required' => true]
+                                        \backend\models\Provinces::getProvinceList(), ['id' => 'prov_id', 'custom' => true, 'prompt' => 'Please select a province', 'required' => true]
                         );
-                        ?>
-                        <?=
-                                $form->field($model, 'district_id')
-                                ->dropDownList(
-                                        \backend\models\Districts::getList(), ['id' => 'prov_id', 'custom' => true, 'prompt' => 'Select district', 'required' => true]
-                        );
+
+                        echo Html::hiddenInput('selected_id', $model->isNewRecord ? '' : $model->district_id, ['id' => 'selected_id']);
+
+                        echo $form->field($model, 'district_id')->widget(DepDrop::classname(), [
+                            'options' => ['id' => 'dist_id', 'custom' => true, 'required' => TRUE],
+                            'pluginOptions' => [
+                                'depends' => ['prov_id'],
+                                'initialize' => $model->isNewRecord ? false : true,
+                                'placeholder' => 'Please select a district',
+                                'url' => Url::to(['/constituencies/district']),
+                                'params' => ['selected_id'],
+                            ]
+                        ]);
                         ?>
                         <?=
                         $form->field($model, 'name', ['enableAjaxValidation' => true])->textInput(['maxlength' => true, 'placeholder' =>

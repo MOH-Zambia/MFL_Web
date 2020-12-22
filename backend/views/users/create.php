@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="card card-success card-outline">
+<div class="card card-primary card-outline">
     <div class="card-body">
 
         <?=
