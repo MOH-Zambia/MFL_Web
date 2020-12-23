@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use dosamigos\google\maps\LatLng;
+
 /**
  * This is the model class for table "geography_district".
  *
@@ -113,7 +114,6 @@ class Districts extends \yii\db\ActiveRecord {
         return $this->hasOne(Provinces::className(), ['id' => 'province_id']);
     }
 
-
     public static function getNames() {
         $names = self::find()->orderBy(['name' => SORT_ASC])->all();
         return ArrayHelper::map($names, 'name', 'name');
@@ -121,6 +121,11 @@ class Districts extends \yii\db\ActiveRecord {
 
     public static function getList() {
         $list = self::find()->orderBy(['name' => SORT_ASC])->all();
+        return ArrayHelper::map($list, 'id', 'name');
+    }
+
+    public static function getListByProvinceID($id) {
+        $list = self::find()->where(['province_id' => $id])->orderBy(['name' => SORT_ASC])->all();
         return ArrayHelper::map($list, 'id', 'name');
     }
 

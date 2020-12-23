@@ -23,5 +23,6 @@ return [
     'center_lng'=>28.368405,
     'polygon_zoom'=>6,
     'polygon_strokeColor'=>'#FF0000',
-    'polygon_strokeColor'=>'#FF0000'
+    'polygon_strokeColor'=>'#FF0000',
+    'cache_duration'=>3600
 ];

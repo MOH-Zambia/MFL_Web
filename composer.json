@@ -45,7 +45,8 @@
         "kartik-v/yii2-money": "@dev",
         "nanson/yii2-postgis": "*",
         "2amigos/yii2-google-maps-library": "*",
-        "pigochu/yii2-jquery-locationpicker": "*"
+        "pigochu/yii2-jquery-locationpicker": "*",
+        "2amigos/yii2-highcharts-widget": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

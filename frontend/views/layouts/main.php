@@ -1,83 +1,200 @@
 <?php
-
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
-use common\widgets\Alert;
+use backend\assets\AppAsset;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
-<body>
-<?php $this->beginBody() ?>
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" sizes="96x96" href="<?= Url::to('@web/img/coa.png') ?>">
+        <?php $this->registerCsrfMetaTags() ?>
+        <title>MFL | <?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
-    ?>
+    </head>
+    <body class="hold-transition layout-top-nav layout-navbar-fixed">
+        <?php $this->beginBody() ?>
+        <div class="wrapper">
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
-</div>
+            <!-- Navbar -->
+            <nav class="main-header navbar navbar-expand-md navbar-light navbar-green navbar-fixed-top">
+                <div class="container">
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+                    <a class="navbar-brand" href="" target="blank">
+                        <?=
+                        Html::img('@web/img/coa.png', ["class" => "brand-image",
+                            'style' => 'opacity: .9']);
+                        ?>
+                        <span class="brand-text text-white text-md font-weight-light">Master Facility List</span>
+                    </a>
+                    <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                        <!-- Left navbar links -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item ">
+                                <?= Html::a('<span class="fas fa-home"></span> Home', ['/site/index'], ["class" => "nav-link text-white text-sm"])
+                                ?>
+                                 
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-info"></span> About</a>
+                            </li>
+                          
+                             <li class="nav-item">
+                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-search"></span> Advanced search</a>
+                            </li>
+                             <li class="nav-item">
+                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-list"></span> Facility list</a>
+                            </li>
+                        </ul>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
+                        <!-- SEARCH FORM -->
+                        <form class="form-inline ml-0 ml-md-4">
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-navbar" type="search" placeholder="Search by keyword" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Right navbar links -->
+                 <!-- Right navbar links -->
+                    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                        <!-- Messages Dropdown Menu -->
+                        <li class="nav-item">
+                            <a class="text-white text-sm nav-link" href="#">
+                              <span class="fas fa-question"></span> FAQs
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white text-sm" href="#">
+                                <span class="fas fa-envelope"></span> Feedback
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="container">
 
-<?php $this->endBody() ?>
-</body>
+                    </div><!-- /.container-fluid -->
+                </div>
+                <!-- Main content -->
+                <div class="content">
+                    <div class="container">
+                        <div class="row">
+                            <?= $content ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.navbar -->
+            <!-- Main Footer -->
+            <footer class="main-footer navbar-light navbar-green brand-text text-white text-md font-weight-light">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-4">
+                                <h2 class="lead"><b>Contact us</b></h2>
+                                <ul class="ml-4 mb-0 fa-ul text-white ">
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-home"></i></span> Ndeke House, Longacres, Lusaka</li>
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> info@moh.gov.zm</li>
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> +260 211 253757</li>
+                                </ul>
+                            </div>
+                            <div class="col-4">
+                                <h2 class="lead"><b>Important links</b></h2>
+                                <ul class="ml-4 mb-0 fa-ul text-white">
+                                    <li class="small"><a class="text-white" href="https://www.moh.gov.zm/" target="blank">Ministry of Health</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.zicta.zm" target="blank">ZICTA</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.szi.gov.zm/" target="blank">Smart Zambia</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-4">
+                                <h2 class="lead"><b>Social media</b></h2>
+                                <div class="mt-4 product-share ">
+                                    <a href="https://facebook.com/mohzambia/" class="text-white">
+                                        <i class="fab fa-facebook-square fa-2x"></i>
+                                    </a>
+                                    <a href="https://twitter.com/moh_zambia" class="text-white">
+                                        <i class="fab fa-twitter-square fa-2x"></i>
+                                    </a>
+                                    <a href="www.youtube.com/" class="text-white">
+                                        <i class="fab fa-youtube-square fa-2x"></i>
+                                    </a>
+                                    <a href="https://github.com/MOH-Zambia/MFL" class="text-white">
+                                        <i class="fab fa-github-square fa-2x"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <hr class="dotted short">
+                    </div>
+                    <div class="col-lg-12 text-center text-sm">
+                        Copyright &copy; <?= date("Y") ?> - Master Facility List-
+                        <a class="text-white" href="https://www.moh.gov.zm/" target="blank">MoH</a>. All rights reserved.
+                    </div>
+                </div>
+
+            </footer>
+        </div>
+
+        <?php $this->endBody() ?>
+        <script>
+            var myArrSuccess = [<?php
+        $flashMessage = Yii::$app->session->getFlash('success');
+        if ($flashMessage) {
+            echo '"' . $flashMessage . '",';
+        }
+        ?>];
+            for (var i = 0; i < myArrSuccess.length; i++) {
+                $.notify(myArrSuccess[i], {
+                    type: 'success',
+                    offset: 100,
+                    allow_dismiss: true,
+                    newest_on_top: true,
+                    timer: 5000,
+                    placement: {from: 'top', align: 'right'}
+                });
+            }
+            var myArrError = [<?php
+        $flashMessage = Yii::$app->session->getFlash('error');
+        if ($flashMessage) {
+            echo '"' . $flashMessage . '",';
+        }
+        ?>];
+            for (var j = 0; j < myArrError.length; j++) {
+                $.notify(myArrError[j], {
+                    type: 'danger',
+                    offset: 100,
+                    allow_dismiss: true,
+                    newest_on_top: true,
+                    timer: 5000,
+                    placement: {from: 'top', align: 'right'}
+                });
+            }
+        </script>
+
+    </body>
 </html>
 <?php $this->endPage() ?>
