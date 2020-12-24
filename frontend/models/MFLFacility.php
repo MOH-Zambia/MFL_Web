@@ -70,6 +70,7 @@ use yii\helpers\ArrayHelper;
 class MFLFacility extends \yii\db\ActiveRecord {
 
     public $province_id;
+    public $service_category;
 
     /**
      * {@inheritdoc}
@@ -83,12 +84,12 @@ class MFLFacility extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-           // [['name', 'timestamp', 'updated', 'district_id', 'facility_type_id', 'operation_status_id', 'ownership_id'], 'required'],
+            // [['name', 'timestamp', 'updated', 'district_id', 'facility_type_id', 'operation_status_id', 'ownership_id'], 'required'],
             [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'default', 'value' => null],
             [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
             [['star', 'rated', 'rating', 'comment',], 'string'],
             [['longitude', 'latitude'], 'number'],
-            [['timestamp', 'updated', 'province_id', 'geom'], 'safe'],
+            [['timestamp', 'updated', 'province_id', 'geom','service_category'], 'safe'],
             [['DHIS2_UID', 'eLMIS_ID', 'iHRIS_ID', 'phone', 'mobile', 'fax'], 'string', 'max' => 13],
             [['HMIS_code'], 'string', 'max' => 10],
             [['smartcare_GUID'], 'string', 'max' => 36],
@@ -146,6 +147,7 @@ class MFLFacility extends \yii\db\ActiveRecord {
             'operation_status_id' => 'Operation status',
             'ownership_id' => 'Ownership',
             'ward_id' => 'Ward',
+            'service_category' => 'Service category',
         ];
     }
 

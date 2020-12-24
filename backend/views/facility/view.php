@@ -325,6 +325,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                     $marker = new Marker([
                                         'position' => $coord,
                                         'title' => $model->name,
+                                         'icon' => \yii\helpers\Url::to('@web/img/map_icon.png')
                                     ]);
 
                                     $marker->attachInfoWindow(

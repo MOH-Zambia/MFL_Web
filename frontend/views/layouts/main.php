@@ -45,17 +45,20 @@ AppAsset::register($this);
                             <li class="nav-item ">
                                 <?= Html::a('<span class="fas fa-home"></span> Home', ['/site/index'], ["class" => "nav-link text-white text-sm"])
                                 ?>
-                                 
+
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-info"></span> About</a>
+                                <?= Html::a('<span class="fas fa-info"></span> About', ['/site/about'], ["class" => "nav-link text-white text-sm"])
+                                ?>
+                             </li>
+
+                            <li class="nav-item">
+                                 <?= Html::a('<span class="fas fa-search"></span> Advanced search', ['/facility/search'], ["class" => "nav-link text-white text-sm"])
+                                ?>
                             </li>
-                          
-                             <li class="nav-item">
-                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-search"></span> Advanced search</a>
-                            </li>
-                             <li class="nav-item">
-                                <a href="#" class="nav-link text-white text-sm"><span class="fas fa-list"></span> Facility list</a>
+                            <li class="nav-item">
+                                <?= Html::a('<span class="fas fa-list"></span> Facility list', ['/facility/index'], ["class" => "nav-link text-white text-sm"])
+                                ?>
                             </li>
                         </ul>
 
@@ -72,12 +75,12 @@ AppAsset::register($this);
                         </form>
                     </div>
                     <!-- Right navbar links -->
-                 <!-- Right navbar links -->
+                    <!-- Right navbar links -->
                     <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                         <!-- Messages Dropdown Menu -->
                         <li class="nav-item">
                             <a class="text-white text-sm nav-link" href="#">
-                              <span class="fas fa-question"></span> FAQs
+                                <span class="fas fa-question"></span> FAQs
                             </a>
                         </li>
                         <li class="nav-item ">
@@ -89,7 +92,7 @@ AppAsset::register($this);
                 </div>
             </nav>
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+            <div class="content-wrapper" >
                 <!-- Content Header (Page header) -->
                 <div class="content-header">
                     <div class="container">
@@ -98,7 +101,7 @@ AppAsset::register($this);
                 </div>
                 <!-- Main content -->
                 <div class="content">
-                    <div class="container">
+                    <div class="container" >
                         <div class="row">
                             <?= $content ?>
                         </div>

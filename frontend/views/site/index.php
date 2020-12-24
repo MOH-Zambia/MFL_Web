@@ -25,6 +25,9 @@ $provinces_model = \backend\models\Provinces::find()
         ->cache(Yii::$app->params['cache_duration'])
         ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km', 'ST_AsGeoJSON(geom) as geom'])
         ->all();
+//get facility types
+$facility_types_model = \backend\models\Facilitytype::find()->cache(Yii::$app->params['cache_duration'])->all();
+$facility_ownership_model = \backend\models\FacilityOwnership::find()->cache(Yii::$app->params['cache_duration'])->all();
 
 /**
  * 
@@ -100,7 +103,7 @@ group by p.name Order by p.name')->queryAll();
 }
 ?>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" style="margin-right:-50px;margin-left:-50px;">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
@@ -468,11 +471,11 @@ group by p.name Order by p.name')->queryAll();
                                                 $type_str .= "<b>Facility type: </b>" . $type . "<br>";
                                                 $type_str .= "<b>Ownership: </b>" . $ownership . "<br>";
                                                 $type_str .= "<b>Operation status: </b><span style='color:green;'>" . $operation_status . "</span><br>";
+                                                $type_str .= Html::a('View more details', ['/facility/view', 'id' => $_model->id], ["class" => "text-sm"]);
                                                 $marker->attachInfoWindow(
                                                         new InfoWindow([
                                                             'content' => '<p><strong><span class="text-center">' . $_model->name . '</span></strong><hr>'
-                                                            . $type_str . '</p>'
-                                                                ])
+                                                            . $type_str . '</p>'])
                                                 );
 
                                                 $map->addOverlay($marker);
@@ -623,7 +626,37 @@ group by p.name Order by p.name')->queryAll();
             </div>
         </div>
         <div class="col-lg-12">
-            &nbsp;&nbsp;
+            <div class="card card-primary card-outline">
+                <div class="card-body">
+                    <h5 class="card-title">Facility Types</h5>
+                    <p class="card-text">
+                    </p>
+                    <?php
+                    if (!empty($facility_types_model)) {
+                        foreach ($facility_types_model as $_typeModel) {
+                            echo Html::a($_typeModel->name, ['/facility/index', 'facility_type_id' => $_typeModel->id], ["class" => "card-link text-sm"]);
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline">
+                <div class="card-body">
+                    <h5 class="card-title">Facility ownership</h5>
+
+                    <p class="card-text">
+                    </p>
+                    <?php
+                    if (!empty($facility_ownership_model)) {
+                        foreach ($facility_ownership_model as $_ownershipModel) {
+                            echo Html::a($_ownershipModel->name, ['/facility/index', 'ownership_id' => $_ownershipModel->id], ["class" => "card-link text-sm"]);
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>

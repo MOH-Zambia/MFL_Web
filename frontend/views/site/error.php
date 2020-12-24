@@ -1,27 +1,49 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $name string */
 /* @var $message string */
 /* @var $exception Exception */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = $name;
 ?>
 <div class="site-error">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?php
+    $arr = explode("(", $name);
+    $error_code = str_replace(")", "", str_replace("#", "", $arr[1]));
+    ?>
 
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
-    </div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="error-page">
+            <?php
+            if ($error_code == 404) {
+                echo '<h2 class="headline text-warning">' . $error_code . '</h2>' .
+                '  <div class="error-content">
+                <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Sorry page not found.</h3>
 
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+                <p>
+                    We could not find the page you were looking for.
+                    Meanwhile, you may <a href="'.Url::to('@web/site/index').'">return Home</a>.
+                </p>
+            </div>';
+            } else {
+                echo '<h2 class="headline text-danger">' . $error_code . '</h2>' .
+                '  <div class="error-content">
+          <h3><i class="fas fa-exclamation-triangle text-danger"></i> Oops! Sorry something went wrong.</h3>
+
+          <p>
+            We will work on fixing that right away.
+            Meanwhile, you may <a href="'.Url::to('@web/site/index').'">return Home</a>.
+          </p>';
+            }
+            ?>
+            <!-- /.error-content -->
+        </div>
+        <!-- /.error-page -->
+    </section>
 
 </div>
