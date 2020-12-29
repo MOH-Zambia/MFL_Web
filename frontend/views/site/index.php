@@ -17,6 +17,8 @@ use kartik\depdrop\DepDrop;
 use kartik\form\ActiveForm;
 use yii\helpers\Url;
 
+$this->title = 'Home';
+$this->params['breadcrumbs'][] = $this->title;
 /* @var $this yii\web\View */
 $this->title = 'Home';
 $connection = Yii::$app->getDb();
@@ -101,6 +103,8 @@ group by p.name Order by p.name')->queryAll();
     array_push($pie_series1, ['name' => 'Total', 'colorByPoint' => true, 'data' => $data2]);
     array_push($column_series1, ['name' => "Total", 'data' => $data3]);
 }
+
+$model
 ?>
 <div class="container-fluid">
     <div class="row" style="margin-right:-50px;margin-left:-50px;">
@@ -576,17 +580,13 @@ group by p.name Order by p.name')->queryAll();
                                 </div>
                                 <div class="col-lg-12">
                                     <?php
+                                    $MFLFacility_model->isNewRecord = !empty($_GET['MFLFacility']['province_id']) ? false : true;
                                     echo Html::hiddenInput('selected_id', $MFLFacility_model->isNewRecord ? '' : $MFLFacility_model->district_id, ['id' => 'selected_id']);
-                                    /* if (isset($_GET['MFLFacility']['province_id']) &&
-                                      !empty($_GET['MFLFacility']['province_id'])) {
-                                      echo
-                                      $form->field($MFLFacility_model, 'district_id')
-                                      ->dropDownList(
-                                      \backend\models\Districts::getListByProvinceID($_GET['MFLFacility']['province_id']), ['custom' => true, 'prompt' => 'Filter by district', 'required' => false]
-                                      ); */
-//  } else {
+
                                     echo $form->field($MFLFacility_model, 'district_id')->widget(DepDrop::classname(), [
-                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false],
+                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,],
+                                        'data' => [backend\models\Districts::getListByProvinceID($MFLFacility_model->province_id)],
+                                        //'value'=>$MFLFacility_model->district_id,
                                         'type' => DepDrop::TYPE_SELECT2,
                                         'pluginOptions' => [
                                             'depends' => ['prov_id'],

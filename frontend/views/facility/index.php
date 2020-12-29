@@ -14,7 +14,7 @@ use yii\grid\ActionColumn;
 /* @var $searchModel backend\models\MFLFacilitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Facilities';
+$this->title = 'Facility list';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -115,11 +115,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'value' => function ($model) {
                                     $name = backend\models\Operationstatus::findOne($model->operation_status_id)->name;
 
-                                    return strtoupper($name) === "OPERATIONAL" ? "<p style='Color: green;'>$name</p>" 
-                                            : "<p style='Color: red;'> $name</p>";
+                                    return strtoupper($name) === "OPERATIONAL" ? "<p style='Color: green;'>$name</p>" : "<p style='Color: red;'> $name</p>";
                                 },
                             ],
-                            // 'DHIS2_UID',
+                            [
+                                'attribute' => 'DHIS2_UID',
+                                'visible' => false
+                            ],
                             //'HMIS_code',
                             // 'smartcare_GUID',
                             // 'eLMIS_ID',

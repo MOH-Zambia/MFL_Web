@@ -42,7 +42,7 @@ class FacilityController extends Controller {
 
         if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['province_id'])) {
             $district_ids = [];
-            $districts = \backend\models\Districts::find()->where(['province_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']])->all();
+            $districts = \backend\models\Districts::find()->cache(Yii::$app->params['cache_duration'])->where(['province_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']])->all();
             if (!empty($districts)) {
                 foreach ($districts as $id) {
                     array_push($district_ids, $id['id']);
@@ -65,7 +65,17 @@ class FacilityController extends Controller {
 
     public function actionSearch() {
         $searchModel = new MFLFacilitySearch();
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch'])) {
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operating_hours']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['district_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['service_category']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['service']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['province_id'])) {
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         } else {
             // a hack to create an illusion that a person has not searched yet
@@ -73,9 +83,11 @@ class FacilityController extends Controller {
             $dataProvider->query->andFilterWhere(['id' => -1]);
         }
 
+        //Filter by province
         if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['province_id'])) {
             $district_ids = [];
-            $districts = \backend\models\Districts::find()->where(['province_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']])->all();
+            $districts = \backend\models\Districts::find()->cache(Yii::$app->params['cache_duration'])
+                            ->where(['province_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']])->all();
             if (!empty($districts)) {
                 foreach ($districts as $id) {
                     array_push($district_ids, $id['id']);
@@ -83,6 +95,86 @@ class FacilityController extends Controller {
             }
 
             $dataProvider->query->andFilterWhere(['IN', 'district_id', $district_ids]);
+        }
+        //Filter by district
+       /* if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['district_id'])) {
+            $dataProvider->query->andFilterWhere(['district_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['district_id']]);
+        }
+        //Filter by constituency
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id'])) {
+            $dataProvider->query->andFilterWhere(['constituency_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id']]);
+        }
+        //Filter by ward
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id'])) {
+            $dataProvider->query->andFilterWhere(['ward_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id']]);
+        }
+        //Filter by ownership
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id'])) {
+            $dataProvider->query->andFilterWhere(['ownership_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id']]);
+        }
+        //Filter by facility type
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id'])) {
+            $dataProvider->query->andFilterWhere(['facility_type_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id']]);
+        }
+        //Filter by operation status
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id'])) {
+            $dataProvider->query->andFilterWhere(['operation_status_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id']]);
+        }*/
+
+
+        //Filter by service category
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['service_category'])) {
+            $service_ids = [];
+            $facility_service_ids = [];
+            $services = \backend\models\FacilityService::find()->cache(Yii::$app->params['cache_duration'])
+                    ->where(['category_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['service_category']])
+                    ->all();
+            if (!empty($services)) {
+                foreach ($services as $id) {
+                    array_push($service_ids, $id['id']);
+                }
+            }
+            if (!empty($service_ids)) {
+                $facility_services = \backend\models\MFLFacilityServices::find()
+                        ->cache(Yii::$app->params['cache_duration'])
+                        ->where(['IN', 'service_id', $service_ids])
+                        ->all();
+                if (!empty($facility_services)) {
+                    foreach ($facility_services as $id) {
+                        array_push($facility_service_ids, $id['facility_id']);
+                    }
+                }
+            }
+            $dataProvider->query->andFilterWhere(['IN', 'id', $facility_service_ids]);
+        }
+        //Filter by service
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['service'])) {
+            $facility_service_ids = [];
+            $facility_services = \backend\models\MFLFacilityServices::find()
+                    ->cache(Yii::$app->params['cache_duration'])
+                    ->where(['service_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['service']])
+                    ->all();
+            if (!empty($facility_services)) {
+                foreach ($facility_services as $id) {
+                    array_push($facility_service_ids, $id['facility_id']);
+                }
+            }
+            $dataProvider->query->andFilterWhere(['IN', 'id', $facility_service_ids]);
+        }
+
+        //Filter by operating hours
+        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operating_hours'])) {
+            $facility_service_ids = [];
+            $facility_op_hrs = \backend\models\MFLFacilityOperatingHours::find()
+                    ->cache(Yii::$app->params['cache_duration'])
+                    ->where(['operatinghours_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['operating_hours']])
+                    ->all();
+            if (!empty($facility_op_hrs)) {
+                foreach ($facility_op_hrs as $id) {
+                    array_push($facility_service_ids, $id['facility_id']);
+                }
+            }
+            $dataProvider->query->andFilterWhere(['IN', 'id', $facility_service_ids]);
         }
 
         return $this->render('search', [

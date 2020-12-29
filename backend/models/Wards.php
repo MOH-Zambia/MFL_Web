@@ -112,5 +112,10 @@ class Wards extends \yii\db\ActiveRecord {
         }
         return $coordinates;
     }
+    
+      public static function getListByDistrictID($id) {
+        $list = self::find()->where(['district_id' => $id])->orderBy(['name' => SORT_ASC])->all();
+        return ArrayHelper::map($list, 'id', 'name');
+    }
 
 }

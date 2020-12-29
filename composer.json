@@ -46,7 +46,8 @@
         "nanson/yii2-postgis": "*",
         "2amigos/yii2-google-maps-library": "*",
         "pigochu/yii2-jquery-locationpicker": "*",
-        "2amigos/yii2-highcharts-widget": "~1.0"
+        "2amigos/yii2-highcharts-widget": "~1.0",
+        "kartik-v/yii2-widget-rating": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

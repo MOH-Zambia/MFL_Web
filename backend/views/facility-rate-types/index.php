@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true],
                     ],
-                    'filter' => \backend\models\Operationstatus::getNames(),
+                    'filter' => \backend\models\MFLFacilityRateTypes::getNames(),
                     'filterInputOptions' => ['prompt' => 'Filter by name', 'class' => 'form-control',],
                     'format' => 'raw',
                     'refreshGrid' => true,

@@ -71,6 +71,8 @@ class MFLFacility extends \yii\db\ActiveRecord {
 
     public $province_id;
     public $service_category;
+    public $service;
+    public $operating_hours;
 
     /**
      * {@inheritdoc}
@@ -89,7 +91,8 @@ class MFLFacility extends \yii\db\ActiveRecord {
             [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
             [['star', 'rated', 'rating', 'comment',], 'string'],
             [['longitude', 'latitude'], 'number'],
-            [['timestamp', 'updated', 'province_id', 'geom','service_category'], 'safe'],
+            [['timestamp', 'updated', 'province_id', 'geom', 'service_category', 'province_id', 'service_category','service',
+                'operating_hours'], 'safe'],
             [['DHIS2_UID', 'eLMIS_ID', 'iHRIS_ID', 'phone', 'mobile', 'fax'], 'string', 'max' => 13],
             [['HMIS_code'], 'string', 'max' => 10],
             [['smartcare_GUID'], 'string', 'max' => 36],

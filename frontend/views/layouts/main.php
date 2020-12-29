@@ -5,7 +5,7 @@
 use yii\helpers\Html;
 use backend\assets\AppAsset;
 use yii\helpers\Url;
-
+use yii\bootstrap4\Breadcrumbs;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -50,10 +50,10 @@ AppAsset::register($this);
                             <li class="nav-item">
                                 <?= Html::a('<span class="fas fa-info"></span> About', ['/site/about'], ["class" => "nav-link text-white text-sm"])
                                 ?>
-                             </li>
+                            </li>
 
                             <li class="nav-item">
-                                 <?= Html::a('<span class="fas fa-search"></span> Advanced search', ['/facility/search'], ["class" => "nav-link text-white text-sm"])
+                                <?= Html::a('<span class="fas fa-search"></span> Advanced search', ['/facility/search'], ["class" => "nav-link text-white text-sm"])
                                 ?>
                             </li>
                             <li class="nav-item">
@@ -94,9 +94,24 @@ AppAsset::register($this);
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" >
                 <!-- Content Header (Page header) -->
-                <div class="content-header">
-                    <div class="container">
+                 <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
 
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <?=
+                                    Breadcrumbs::widget([
+                                        'homeLink' => ['label' => 'Home',
+                                            'url' => Yii::$app->getHomeUrl() . 'site/index'],
+                                        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                                    ])
+                                    ?>
+                                </ol>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- Main content -->

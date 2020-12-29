@@ -16,11 +16,12 @@ use dosamigos\google\maps\overlays\Polygon;
 use dosamigos\google\maps\layers\BicyclingLayer;
 use kartik\form\ActiveForm;
 use \yii\data\ActiveDataProvider;
+use kartik\widgets\StarRating;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\MFLFacility */
 
-$this->title = $model->name;
+$this->title = "View " . $model->name;
 $this->params['breadcrumbs'][] = $this->title;
 
 $query_service = backend\models\MFLFacilityServices::find()->where(['facility_id' => $model->id])->orderBy(['service_id' => SORT_ASC]);
@@ -82,6 +83,9 @@ $facility_operating_hours = new ActiveDataProvider([
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Equipment</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-facility-rating-tab" data-toggle="pill" href="#custom-tabs-facility-rating" role="tab" aria-controls="custom-tabs-facility-rating" aria-selected="false">Rate facility</a>
                                 </li>
                             </ul>
                         </div>
@@ -314,7 +318,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                                         'columns' => [
                                                             ['class' => 'yii\grid\SerialColumn'],
                                                             //'id',
-                                                              [
+                                                            [
                                                                 'label' => 'Service Type',
                                                                 'filter' => false,
                                                                 'value' => function ($facility_services) {
@@ -331,7 +335,6 @@ $facility_operating_hours = new ActiveDataProvider([
                                                                     ;
                                                                 },
                                                             ],
-                                                          
                                                         ],
                                                     ]);
                                                 } else {
@@ -417,14 +420,103 @@ $facility_operating_hours = new ActiveDataProvider([
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="custom-tabs-facility-rating" role="tabpanel" aria-labelledby="custom-tabs-facility-rating">
+                                    <?php
+                                    $facility_rate_count = \backend\models\MFLFacilityRatings::find()
+                                                    ->cache(Yii::$app->params['cache_duration'])
+                                                    ->where(['facility_id' => $model->id])->count();
+                                    $facility_rates_sum = \backend\models\MFLFacilityRatings::find()
+                                            ->cache(Yii::$app->params['cache_duration'])
+                                            ->where(['facility_id' => $model->id])
+                                            ->sum('rate_value');
+                                    $rating = !empty($facility_rate_count) && !empty($facility_rates_sum) ? $facility_rates_sum / $facility_rate_count : 0;
+                                    $rating_model = new \backend\models\MFLFacilityRatings();
+                                    $rate_type_model = \backend\models\MFLFacilityRateTypes::find()
+                                            ->cache(Yii::$app->params['cache_duration'])
+                                            ->all();
+                                    ?>
+                                    <p class="text-sm">Average Facility rating:
+                                        <?php
+                                        echo $rating . " " . StarRating::widget([
+                                            'name' => 'facility_rating',
+                                            'value' => $rating,
+                                            'pluginOptions' => [
+                                                'min' => 0,
+                                                'max' => 5,
+                                                'step' => 1,
+                                                'size' => 'sm',
+                                                'displayOnly' => true,
+                                                'starCaptions' => [
+                                                    0 => 'Not rated',
+                                                    1 => 'Very Poor',
+                                                    2 => 'Poor',
+                                                    3 => 'Average',
+                                                    4 => 'Good',
+                                                    5 => 'Very Good',
+                                                ],
+                                                'starCaptionClasses' => [
+                                                    0 => 'text-danger',
+                                                    1 => 'text-danger',
+                                                    2 => 'text-warning',
+                                                    3 => 'text-info',
+                                                    4 => 'text-primary',
+                                                    5 => 'text-success',
+                                                ],
+                                            ],
+                                        ]);
+                                        ?>
+
+                                    </p>
+                                    <hr class="dotted short">
+                                    <?php
+                                    if (!empty($rate_type_model)) {
+                                        $count = 1;
+                                        echo '<h4>Rate facility on:</h4>';
+                                        echo "<p class='text-sm'>Stars represent levels of satisfaction i.e. 5 (Very Good), 4 (Good), 3 (Average), 2 (Poor), 1 (Very Poor)</p>";
+                                        echo ' <div class="row">';
+                                        foreach ($rate_type_model as $_rate_model) {
+                                            echo ' <div class="col-md-4">';
+                                            echo '<p>' . $count . "." . $_rate_model['name'] . "</p>";
+                                            ?>
+
+
+                                            <div class="card card-primary collapsed-card">
+                                                <div class="card-header">
+                                                    <p class="card-title">View rating</p>
+
+                                                    <div class="card-tools">
+                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus fa-2x"></i>
+                                                        </button>
+                                                    </div>
+                                                    <!-- /.card-tools -->
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <p>Average rating: 0.00<br>
+                                                        Number of ratings: 0 </p>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                            <!-- /.card -->
+                                        </div>
+
+                                        <?php
+                                        $count++;
+                                    }
+                                    echo '</div>';
+                                } else {
+                                    echo "<p class='text-sm'>You cannot rate facility.There are no rate types at the moment!</p>";
+                                }
+                                ?>
                             </div>
                         </div>
-                        <!-- /.card -->
                     </div>
+                    <!-- /.card -->
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 

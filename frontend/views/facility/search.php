@@ -14,16 +14,23 @@ use yii\grid\ActionColumn;
 /* @var $searchModel backend\models\MFLFacilitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Facilities';
+$this->title = 'Advanced search';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
     <div class="row"  style="margin-right:-100px;margin-left:-100px;">
-        <div class="col-lg-12 text-sm">
-            <div class="card card-primary">
-                <div class="card-body">
-                    <p>Filter facilities below </p>
 
+        <div class="col-lg-12 text-sm">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <p class="card-title text-sm">Filter facilities below</p>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <div class="card-body">
                     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
                 </div>
             </div>
@@ -36,8 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </p>
 
                     <?php
-                    echo "<p class='text-sm'>Filter facilities using the form above</p>";
                     if ($dataProvider->getCount() > 0) {
+                        echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
                         echo GridView::widget([
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
@@ -165,7 +172,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 //'location_type_id',
                                 //'operation_status_id',
                                 //'ownership_id',
-                                //'ward_id',
+                                [
+                                    'attribute' => 'ward_id',
+                                    'visible' => false,
+                                    'value' => function ($model) {
+                                        return !empty($model->ward_id) ? backend\models\Wards::findOne($model->ward_id)->name : "";
+                                    }
+                                ],
                                 ['class' => ActionColumn::className(),
                                     //'options' => ['style' => 'width:130px;'],
                                     'template' => '{view}',
@@ -186,6 +199,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                             ],
                         ]);
+                    } elseif (!empty($_GET['MFLFacilitySearch']) && $dataProvider->getCount() <= 0) {
+                        echo "<p class='text-sm'>No records were found using your search parameters. Try searching again!</p>";
+                    } else {
+                        echo "<p class='text-sm'>Filter facilities using the form above</p>";
                     }
                     ?>
 
