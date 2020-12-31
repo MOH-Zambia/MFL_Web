@@ -3,7 +3,7 @@
 namespace backend\models;
 
 use Yii;
-
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "MFL_Facility_ratings".
  *
@@ -17,26 +17,25 @@ use Yii;
  *
  * @property MFLFacilityRateTypes $rateType
  */
-class MFLFacilityRatings extends \yii\db\ActiveRecord
-{
+class MFLFacilityRatings extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'MFL_Facility_ratings';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id', 'rate_type_id', 'rating', 'facility_id'], 'required'],
-            [['id', 'rate_type_id', 'date_created', 'facility_id'], 'default', 'value' => null],
-            [['id', 'rate_type_id', 'date_created', 'facility_id','rate_value'], 'integer'],
-            [['rating', 'email', 'comment'], 'string'],
+            [['rate_type_id', 'rating', 'facility_id'], 'required'],
+            [['rate_type_id', 'facility_id'], 'default', 'value' => null],
+            [['rate_type_id', 'date_created', 'facility_id', 'rate_value'], 'integer'],
+            [['rating', 'comment'], 'string'],
+            ['email', 'email', 'message' => "The email isn't correct!"],
             [['id'], 'unique'],
             [['rate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => MFLFacilityRateTypes::className(), 'targetAttribute' => ['rate_type_id' => 'id']],
         ];
@@ -45,8 +44,7 @@ class MFLFacilityRatings extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'rate_type_id' => 'Rate type',
@@ -60,12 +58,25 @@ class MFLFacilityRatings extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function behaviors() {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['date_created']
+                ],
+            ],
+        ];
+    }
+    /**
      * Gets query for [[RateType]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRateType()
-    {
+    public function getRateType() {
         return $this->hasOne(MFLFacilityRateTypes::className(), ['id' => 'rate_type_id']);
     }
+
 }

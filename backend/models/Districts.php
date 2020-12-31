@@ -39,7 +39,7 @@ class Districts extends \yii\db\ActiveRecord {
         return [
             [['name', 'geom', 'district_type_id', 'province_id'], 'required'],
             [['population', 'pop_density', 'area_sq_km'], 'number'],
-            [['geom'], 'string'],
+            [['geom'], 'safe'],
             [['district_type_id', 'province_id'], 'default', 'value' => null],
             [['district_type_id', 'province_id'], 'integer'],
             [['name'], 'string', 'max' => 30],

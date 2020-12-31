@@ -12,6 +12,7 @@ use yii\filters\AccessControl;
 use yii\helpers\Json;
 use backend\models\AuditTrail;
 use backend\models\User;
+use yii\db\Expression;
 
 /**
  * WardsController implements the CRUD actions for Wards model.
@@ -25,10 +26,10 @@ class WardsController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'delete', 'view'],
+                'only' => ['index', 'delete', 'view','create','update'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'delete', 'view'],
+                        'actions' => ['index', 'delete', 'view','create','update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -63,17 +64,17 @@ class WardsController extends Controller {
                 }
                 $dataProvider->query->andFilterWhere(['IN', 'district_id', $district_ids]);
 
-              /*  if (!empty($district_ids)) {
-                    $constituencies = \backend\models\Constituency::find()
-                                    ->where(["IN", "district_id", $district_ids])->all();
-                    if (!empty($constituencies)) {
-                        foreach ($constituencies as $id) {
-                            array_push($constituency_ids, $id['id']);
-                        }
-                    }
+                /*  if (!empty($district_ids)) {
+                  $constituencies = \backend\models\Constituency::find()
+                  ->where(["IN", "district_id", $district_ids])->all();
+                  if (!empty($constituencies)) {
+                  foreach ($constituencies as $id) {
+                  array_push($constituency_ids, $id['id']);
+                  }
+                  }
 
-                    $dataProvider->query->andFilterWhere(['IN', 'constituency_id', $constituency_ids]);
-                }*/
+                  $dataProvider->query->andFilterWhere(['IN', 'constituency_id', $constituency_ids]);
+                  } */
             }
 
             if (Yii::$app->request->post('hasEditable')) {
@@ -104,11 +105,11 @@ class WardsController extends Controller {
                         $action = "updated " . $model->name . " Wards area from $old_area_sq_km sq kilometer to " . $model->area_sq_km . " sq kilometer";
                     }
                     if ($old_constituency_id != $model->constituency_id) {
-                        $old_name=!empty($old_constituency_id)?\backend\models\Constituency::findOne($old_constituency_id)->name:"" ;
-                        $action = "updated " . $model->name . " Wards constituency from " .$old_name . " to " . \backend\models\Constituency::findOne($model->constituency_id)->name;
+                        $old_name = !empty($old_constituency_id) ? \backend\models\Constituency::findOne($old_constituency_id)->name : "";
+                        $action = "updated " . $model->name . " Wards constituency from " . $old_name . " to " . \backend\models\Constituency::findOne($model->constituency_id)->name;
                     }
                     if ($old_district_id != $model->district_id) {
-                        $old_name=!empty($old_district_id) ? \backend\models\Districts::findOne($old_district_id)->name:"";
+                        $old_name = !empty($old_district_id) ? \backend\models\Districts::findOne($old_district_id)->name : "";
                         $action = "updated " . $model->name . " Wards district from " . $old_name . " to " . \backend\models\Districts::findOne($model->district_id)->name;
                     }
 
@@ -153,7 +154,7 @@ class WardsController extends Controller {
     public function actionView($id) {
         if (User::userIsAllowedTo('Manage wards')) {
             $model = Wards::find()
-                            ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km', 'ST_AsGeoJSON(geom) as geom', 'constituency_id','district_id'])
+                            ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km', 'ST_AsGeoJSON(geom) as geom', 'constituency_id', 'district_id'])
                             ->where(["id" => $id])->one();
             return $this->render('view', [
                         'model' => $model,
@@ -178,20 +179,84 @@ class WardsController extends Controller {
             }
 
             if ($model->load(Yii::$app->request->post())) {
-                if ($model->save()) {
-                    $audit = new AuditTrail();
-                    $audit->user = Yii::$app->user->id;
-                    $audit->action = "Added Ward " . $model->name;
-                    $audit->ip_address = Yii::$app->request->getUserIP();
-                    $audit->user_agent = Yii::$app->request->getUserAgent();
-                    $audit->save();
-                    Yii::$app->session->setFlash('success', 'Ward ' . $model->name . ' was successfully added.');
-                    return $this->redirect(['view', 'id' => $model->id]);
+                //var_dump(Yii::$app->request->post());
+                $coordinates = json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']['coordinates'];
+
+                // $coord_array = "";
+                //get latitude and longitude and create a geom array
+                if (!empty($coordinates)) {
+                    $coordinates_json = \GuzzleHttp\json_encode(json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']);
+                    $model->geom = new Expression("ST_Force2D(ST_Multi(ST_GeomFromGeoJSON(:geom)))",
+                            array(':geom' => $coordinates_json));
+
+                    if ($model->save()) {
+                        $audit = new AuditTrail();
+                        $audit->user = Yii::$app->user->id;
+                        $audit->action = "Added Ward " . $model->name;
+                        $audit->ip_address = Yii::$app->request->getUserIP();
+                        $audit->user_agent = Yii::$app->request->getUserAgent();
+                        $audit->save();
+                        Yii::$app->session->setFlash('success', 'Ward ' . $model->name . ' was successfully added.');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        $message = "";
+                        foreach ($model->getErrors() as $error) {
+                            $message .= $error[0];
+                        }
+                        Yii::$app->session->setFlash('error', 'Error occured while adding Ward ' . $model->name . ".Error is:::$message");
+                    }
                 } else {
-                    Yii::$app->session->setFlash('error', 'Error occured while adding Ward ' . $model->name);
+                    Yii::$app->session->setFlash('error', 'You need to pick geometry coordinates for the ward!');
                 }
-                return $this->redirect(['index']);
             }
+            return $this->render('create', ['model' => $model]);
+        } else {
+            Yii::$app->session->setFlash('error', 'You are not authorised to perform that action.');
+            return $this->redirect(['home/home']);
+        }
+    }
+
+    public function actionUpdate($id) {
+        if (User::userIsAllowedTo('Manage wards')) {
+            //   $model = $this->findModel($id);
+            $model = Wards::find()
+                            ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km',
+                                'constituency_id', 'district_id', 'ST_AsGeoJSON(geom) as geom'])
+                            ->where(["id" => $id])->one();
+            if (Yii::$app->request->isAjax) {
+                $model->load(Yii::$app->request->post());
+                return Json::encode(\yii\widgets\ActiveForm::validate($model));
+            }
+            if ($model->load(Yii::$app->request->post())) {
+                $coordinates = json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']['coordinates'];
+                if (!empty($coordinates)) {
+                    $coordinates_json = \GuzzleHttp\json_encode(json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']);
+                    $model->geom = new Expression("ST_Force2D(ST_Multi(ST_GeomFromGeoJSON(:geom)))",
+                            array(':geom' => $coordinates_json));
+
+                    if ($model->save()) {
+                        $audit = new AuditTrail();
+                        $audit->user = Yii::$app->user->id;
+                        $audit->action = "Updated Ward " . $model->name;
+                        $audit->ip_address = Yii::$app->request->getUserIP();
+                        $audit->user_agent = Yii::$app->request->getUserAgent();
+                        $audit->save();
+                        Yii::$app->session->setFlash('success', 'Ward ' . $model->name . ' was successfully updated.');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        $message = "";
+                        foreach ($model->getErrors() as $error) {
+                            $message .= $error[0];
+                        }
+                        Yii::$app->session->setFlash('error', 'Error occured while updating Ward ' . $model->name . ".Error is:::$message");
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'You need to pick geometry coordinates for the ward!');
+                }
+            }
+            return $this->render('update', [
+                        'model' => $model
+            ]);
         } else {
             Yii::$app->session->setFlash('error', 'You are not authorised to perform that action.');
             return $this->redirect(['home/home']);

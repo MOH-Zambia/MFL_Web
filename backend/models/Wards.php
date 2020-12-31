@@ -23,7 +23,8 @@ use dosamigos\google\maps\LatLng;
 class Wards extends \yii\db\ActiveRecord {
 
     public $province_id;
-   // public $district_id;
+
+    // public $district_id;
 
     /**
      * {@inheritdoc}
@@ -39,16 +40,20 @@ class Wards extends \yii\db\ActiveRecord {
         return [
             [['name', 'geom', 'district_id'], 'required'],
             [['population', 'pop_density', 'area_sq_km'], 'number'],
-            [['geom'], 'string'],
-            [['province_id'], 'safe'],
+            //[['geom'], 'string'],
+            [['province_id', 'geom'], 'safe'],
             [['constituency_id'], 'default', 'value' => null],
             [['constituency_id', 'district_id'], 'integer'],
             [['name'], 'string', 'max' => 254],
             ['name', 'unique', 'when' => function($model) {
-                    return $model->isAttributeChanged('name') && !empty(self::findOne(['name' => $model->name, "constituency_id" => $model->constituency_id])) ? TRUE : FALSE;
+                    return trim($model->isAttributeChanged('name')) &&
+                            $model->isAttributeChanged('constituency_id') &&
+                            !empty(self::findOne(['name' => $model->name, "constituency_id" => $model->constituency_id])) ? TRUE : FALSE;
                 }, 'message' => 'Ward name already exist for this constituency!'],
             ['name', 'unique', 'when' => function($model) {
-                    return $model->isAttributeChanged('name') && !empty(self::findOne(['name' => $model->name, "district_id" => $model->district_id])) ? TRUE : FALSE;
+                    return $model->isAttributeChanged('name') &&
+                            $model->isAttributeChanged('district_id') &&
+                            !empty(self::findOne(['name' => $model->name, "district_id" => $model->district_id])) ? TRUE : FALSE;
                 }, 'message' => 'Ward name already exist for this district!'],
             [['constituency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Constituency::className(), 'targetAttribute' => ['constituency_id' => 'id']],
             [['district_id'], 'exist', 'skipOnError' => true, 'targetClass' => Districts::className(), 'targetAttribute' => ['district_id' => 'id']]
@@ -112,8 +117,8 @@ class Wards extends \yii\db\ActiveRecord {
         }
         return $coordinates;
     }
-    
-      public static function getListByDistrictID($id) {
+
+    public static function getListByDistrictID($id) {
         $list = self::find()->where(['district_id' => $id])->orderBy(['name' => SORT_ASC])->all();
         return ArrayHelper::map($list, 'id', 'name');
     }

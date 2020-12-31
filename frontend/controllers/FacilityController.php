@@ -97,29 +97,29 @@ class FacilityController extends Controller {
             $dataProvider->query->andFilterWhere(['IN', 'district_id', $district_ids]);
         }
         //Filter by district
-       /* if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['district_id'])) {
-            $dataProvider->query->andFilterWhere(['district_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['district_id']]);
-        }
-        //Filter by constituency
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id'])) {
-            $dataProvider->query->andFilterWhere(['constituency_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id']]);
-        }
-        //Filter by ward
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id'])) {
-            $dataProvider->query->andFilterWhere(['ward_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id']]);
-        }
-        //Filter by ownership
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id'])) {
-            $dataProvider->query->andFilterWhere(['ownership_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id']]);
-        }
-        //Filter by facility type
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id'])) {
-            $dataProvider->query->andFilterWhere(['facility_type_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id']]);
-        }
-        //Filter by operation status
-        if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id'])) {
-            $dataProvider->query->andFilterWhere(['operation_status_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id']]);
-        }*/
+        /* if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['district_id'])) {
+          $dataProvider->query->andFilterWhere(['district_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['district_id']]);
+          }
+          //Filter by constituency
+          if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id'])) {
+          $dataProvider->query->andFilterWhere(['constituency_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id']]);
+          }
+          //Filter by ward
+          if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id'])) {
+          $dataProvider->query->andFilterWhere(['ward_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id']]);
+          }
+          //Filter by ownership
+          if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id'])) {
+          $dataProvider->query->andFilterWhere(['ownership_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id']]);
+          }
+          //Filter by facility type
+          if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id'])) {
+          $dataProvider->query->andFilterWhere(['facility_type_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id']]);
+          }
+          //Filter by operation status
+          if (!empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id'])) {
+          $dataProvider->query->andFilterWhere(['operation_status_id' => Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id']]);
+          } */
 
 
         //Filter by service category
@@ -181,6 +181,36 @@ class FacilityController extends Controller {
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionRating() {
+        $model = new \backend\models\MFLFacilityRatings();
+        if ($model->load(Yii::$app->request->post())) {
+
+            $rating = Yii::$app->request->post()['MFLFacilityRatings'][$model->rate_type_id]['rating'];
+            $model->rate_value = $rating;
+            $ratings = [
+                1 => 'Very Poor',
+                2 => 'Poor',
+                3 => 'Average',
+                4 => 'Good',
+                5 => 'Very Good',
+            ];
+            $model->rating = $ratings[$rating];
+            //  Yii::warning('**********************', var_export("RATTTTIINNNG:::::", true));
+            //  Yii::warning('**********************', var_export($model->rating, true));
+
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Facility rating was successful.');
+            } else {
+                $message = '';
+                foreach ($model->getErrors() as $error) {
+                    $message .= $error[0];
+                }
+                Yii::$app->session->setFlash('error', 'Error occured while rating facility. Error is::.' . $message);
+            }
+            return $this->renderAjax('success', []);
+        }
     }
 
 }

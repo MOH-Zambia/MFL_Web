@@ -8,6 +8,7 @@ use yii\grid\ActionColumn;
 use backend\models\User;
 use kartik\number\NumberControl;
 use kartik\dialog\Dialog;
+
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ProvincesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -21,8 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <p>
             <?php
             if (User::userIsAllowedTo('Manage provinces')) {
-                echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
-                    return false;"><i class="fa fa-plus"></i> Add Province</button>';
+                // echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
+                //   return false;"><i class="fa fa-plus"></i> Add Province</button>';
+                echo Html::a('<i class="fa fa-plus"></i> Add Province', ['create'], ['class' => 'btn btn-sm btn-primary']);
                 echo '<hr class="dotted short">';
             }
             ?>
@@ -92,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'geom',
                 ['class' => ActionColumn::className(),
                     'options' => ['style' => 'width:130px;'],
-                    'template' => '{view}{delete}',
+                    'template' => '{view}{update}{delete}',
                     'buttons' => [
                         'view' => function ($url, $model) {
                             return Html::a(
@@ -105,6 +107,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'class' => 'bt btn-lg'
                                             ]
                             );
+                        },
+                        'update' => function ($url, $model) {
+                            if (User::userIsAllowedTo('Manage provinces')) {
+                                return Html::a(
+                                                '<span class="fas fa-edit"></span>', ['update', 'id' => $model->id], [
+                                            'title' => 'Update all details',
+                                            'data-toggle' => 'tooltip',
+                                            'data-placement' => 'top',
+                                            'data-pjax' => '0',
+                                            'style' => "padding:5px;",
+                                            'class' => 'bt btn-lg'
+                                                ]
+                                );
+                            }
                         },
                         'delete' => function ($url, $model) {
                             if (User::userIsAllowedTo('Remove provinces')) {
@@ -199,7 +215,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="modal-footer justify-content-between">
                 <?= Html::submitButton('Save province', ['class' => 'btn btn-primary btn-sm']) ?>
-                <?php ActiveForm::end() ?>
+<?php ActiveForm::end() ?>
             </div>
         </div>
         <!-- /.modal-content -->

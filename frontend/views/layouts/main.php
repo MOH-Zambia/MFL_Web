@@ -18,6 +18,21 @@ AppAsset::register($this);
         <link rel="icon" type="image/png" sizes="96x96" href="<?= Url::to('@web/img/coa.png') ?>">
         <?php $this->registerCsrfMetaTags() ?>
         <title>MFL | <?= Html::encode($this->title) ?></title>
+          <!-- Leaflet kernel -->
+        <!--<link  href="<?= Url::to('@web/leaflet/leaflet.css') ?>" rel="stylesheet" />
+        <script src="<?= Url::to('@web/leaflet/leaflet-src.js') ?>"></script>
+
+    
+        <link  href="<?= Url::to('@web/leaflet/leaflet.draw.css') ?>" rel="stylesheet" />
+        <script src="<?= Url::to('@web/leaflet/leaflet.draw-src.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.geometryutil.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.snap.js') ?>"></script>
+
+      
+        <script src="<?= Url::to('@web/leaflet/togeojson.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.filelayer.js') ?>"></script>
+
+        <script src="<?= Url::to('@web/leaflet/Control.Draw.Plus.js') ?>"></script>-->
         <?php $this->head() ?>
 
     </head>

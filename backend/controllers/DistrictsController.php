@@ -12,6 +12,7 @@ use yii\filters\AccessControl;
 use yii\helpers\Json;
 use backend\models\AuditTrail;
 use backend\models\User;
+use yii\db\Expression;
 
 /**
  * DistrictsController implements the CRUD actions for Districts model.
@@ -25,10 +26,10 @@ class DistrictsController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'delete', 'view'],
+                'only' => ['index', 'delete', 'view', 'create', 'update'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'delete', 'view'],
+                        'actions' => ['index', 'delete', 'view', 'create', 'update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -152,20 +153,74 @@ class DistrictsController extends Controller {
             }
 
             if ($model->load(Yii::$app->request->post())) {
-                if ($model->save()) {
-                    $audit = new AuditTrail();
-                    $audit->user = Yii::$app->user->id;
-                    $audit->action = "Added district " . $model->name;
-                    $audit->ip_address = Yii::$app->request->getUserIP();
-                    $audit->user_agent = Yii::$app->request->getUserAgent();
-                    $audit->save();
-                    Yii::$app->session->setFlash('success', 'District ' . $model->name . ' was successfully added.');
-                    return $this->redirect(['view', 'id' => $model->id]);
+                $coordinates = json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']['coordinates'];
+
+                if (!empty($coordinates)) {
+                    $coordinates_json = \GuzzleHttp\json_encode(json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']);
+                    $model->geom = new Expression("ST_Force2D(ST_Multi(ST_GeomFromGeoJSON(:geom)))",
+                            array(':geom' => $coordinates_json));
+                    if ($model->save()) {
+                        $audit = new AuditTrail();
+                        $audit->user = Yii::$app->user->id;
+                        $audit->action = "Added district " . $model->name;
+                        $audit->ip_address = Yii::$app->request->getUserIP();
+                        $audit->user_agent = Yii::$app->request->getUserAgent();
+                        $audit->save();
+                        Yii::$app->session->setFlash('success', 'District ' . $model->name . ' was successfully added.');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Error occured while adding district ' . $model->name);
+                    }
+                    //  return $this->redirect(['index']);
                 } else {
-                    Yii::$app->session->setFlash('error', 'Error occured while adding district ' . $model->name);
+                    Yii::$app->session->setFlash('error', 'You need to pick geometry coordinates for the district!');
                 }
-                return $this->redirect(['index']);
             }
+            return $this->render('create', ['model' => $model]);
+        } else {
+            Yii::$app->session->setFlash('error', 'You are not authorised to perform that action.');
+            return $this->redirect(['home/home']);
+        }
+    }
+
+    public function actionUpdate($id) {
+        if (User::userIsAllowedTo('Manage districts')) {
+            $model = Districts::find()
+                            ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km',
+                                'district_type_id', 'province_id', 'ST_AsGeoJSON(geom) as geom'])
+                            ->where(["id" => $id])->one();
+            if (Yii::$app->request->isAjax) {
+                $model->load(Yii::$app->request->post());
+                return Json::encode(\yii\widgets\ActiveForm::validate($model));
+            }
+
+            if ($model->load(Yii::$app->request->post())) {
+                $coordinates = json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']['coordinates'];
+
+                if (!empty($coordinates)) {
+                    $coordinates_json = \GuzzleHttp\json_encode(json_decode(Yii::$app->request->post()['geom'], true)['features'][0]['geometry']);
+                    $model->geom = new Expression("ST_Force2D(ST_Multi(ST_GeomFromGeoJSON(:geom)))",
+                            array(':geom' => $coordinates_json));
+                    if ($model->save()) {
+                        $audit = new AuditTrail();
+                        $audit->user = Yii::$app->user->id;
+                        $audit->action = "Updated district " . $model->name;
+                        $audit->ip_address = Yii::$app->request->getUserIP();
+                        $audit->user_agent = Yii::$app->request->getUserAgent();
+                        $audit->save();
+                        Yii::$app->session->setFlash('success', 'District ' . $model->name . ' was successfully updated.');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Error occured while updating district ' . $model->name);
+                    }
+                    //  return $this->redirect(['index']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'You need to pick geometry coordinates for the district!');
+                }
+            }
+            return $this->render('update', [
+                        'model' => $model
+            ]);
         } else {
             Yii::$app->session->setFlash('error', 'You are not authorised to perform that action.');
             return $this->redirect(['home/home']);

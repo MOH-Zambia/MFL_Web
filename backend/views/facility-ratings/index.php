@@ -29,6 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'enableSorting' => false,
                 'attribute' => 'facility_id',
                 'format' => 'raw',
+                'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filter' => \backend\models\MFLFacility::getList(),
+                'filterInputOptions' => ['prompt' => 'Filter by facility', 'class' => 'form-control',],
+                'value' => function ($model) {
+                    return backend\models\MFLFacility::findOne($model->facility_id)->name;
+                }
             ],
             [
                 'enableSorting' => true,
@@ -37,14 +46,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filter' => \backend\models\MFLFacilityRateTypes::getNames(),
+                'filter' => \backend\models\MFLFacilityRateTypes::getList(),
                 'filterInputOptions' => ['prompt' => 'Filter by type', 'class' => 'form-control',],
                 'format' => 'raw',
+                'value'=>function($model){
+                return backend\models\MFLFacilityRateTypes::findOne($model->rate_type_id)->name;
+                }
             ],
             [
                 //'enableSorting' => false,
+                'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filter' => [
+                    'Very Poor' => 'Very Poor',
+                    'Poor' => 'Poor',
+                    'Average' => 'Average',
+                    'Good' => 'Good',
+                    'Very Good' => 'Very Good',
+                ],
+                'filterInputOptions' => ['prompt' => 'Filter by rating', 'class' => 'form-control',],
                 'attribute' => 'rating',
-                'filter' => false,
                 'format' => 'raw',
             ],
             [
@@ -60,10 +83,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
             ],
             [
-                //'enableSorting' => false,
                 'attribute' => 'date_created',
                 'filter' => false,
-                'format' => 'raw',
+                'value' => function($model) {
+                    return date('d-M-Y', $model->date_created);
+                }
             ],
             ['class' => ActionColumn::className(),
                 'options' => ['style' => 'width:130px;'],
@@ -77,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'data-toggle' => 'tooltip',
                                         'data-placement' => 'top',
                                         'data' => [
-                                            'confirm' => 'Are you sure you want to remove ' . $model->name . ' MFL facility rating?<br>'
+                                            'confirm' => 'Are you sure you want to remove MFL facility rating?<br>'
                                             . 'Rating will only be removed if its not being used by the system!',
                                             'method' => 'post',
                                         ],

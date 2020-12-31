@@ -66,48 +66,46 @@ class FacilityRatingsController extends Controller {
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
- 
-    public function actionView($id) {
-        return $this->render('view', [
-                    'model' => $this->findModel($id),
-        ]);
-    }    */
 
+      public function actionView($id) {
+      return $this->render('view', [
+      'model' => $this->findModel($id),
+      ]);
+      } */
     /**
      * Creates a new MFLFacilityRatings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
-    
-    public function actionCreate() {
-        $model = new MFLFacilityRatings();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+      public function actionCreate() {
+      $model = new MFLFacilityRatings();
 
-        return $this->render('create', [
-                    'model' => $model,
-        ]);
-    } */
+      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      return $this->redirect(['view', 'id' => $model->id]);
+      }
 
+      return $this->render('create', [
+      'model' => $model,
+      ]);
+      } */
     /**
      * Updates an existing MFLFacilityRatings model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-    
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+      public function actionUpdate($id) {
+      $model = $this->findModel($id);
 
-        return $this->render('update', [
-                    'model' => $model,
-        ]);
-    } */
+      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      return $this->redirect(['view', 'id' => $model->id]);
+      }
+
+      return $this->render('update', [
+      'model' => $model,
+      ]);
+      } */
 
     /**
      * Deletes an existing MFLFacilityRatings model.
@@ -116,7 +114,6 @@ class FacilityRatingsController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-
     public function actionDelete($id) {
         if (User::userIsAllowedTo('Remove facility ratings')) {
             $model = $this->findModel($id);
@@ -125,16 +122,16 @@ class FacilityRatingsController extends Controller {
                 if ($model->delete()) {
                     $audit = new AuditTrail();
                     $audit->user = Yii::$app->user->id;
-                    $audit->action = "Removed Facility rating '$name' from the system.";
+                    $audit->action = "Removed Facility rating  from the system.";
                     $audit->ip_address = Yii::$app->request->getUserIP();
                     $audit->user_agent = Yii::$app->request->getUserAgent();
                     $audit->save();
-                    Yii::$app->session->setFlash('success', "Facility rating '$name' was successfully removed.");
+                    Yii::$app->session->setFlash('success', "Facility rating was successfully removed.");
                 } else {
-                    Yii::$app->session->setFlash('error', "Facility rating '$name' could not be removed. Please try again!");
+                    Yii::$app->session->setFlash('error', "Facility rating  could not be removed. Please try again!");
                 }
             } catch (yii\db\IntegrityException $ex) {
-                Yii::$app->session->setFlash('error', "Facility rating '$name' could not be removed. Please try again!");
+                Yii::$app->session->setFlash('error', "Facility rating could not be removed. Please try again!");
             }
 
             return $this->redirect(['index']);
@@ -143,6 +140,7 @@ class FacilityRatingsController extends Controller {
             return $this->redirect(['home/home']);
         }
     }
+
     /**
      * Finds the MFLFacilityRatings model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

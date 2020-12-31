@@ -17,6 +17,8 @@ use dosamigos\google\maps\layers\BicyclingLayer;
 use kartik\form\ActiveForm;
 use \yii\data\ActiveDataProvider;
 use kartik\widgets\StarRating;
+use demogorgorn\ajax\AjaxSubmitButton;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\MFLFacility */
@@ -51,7 +53,10 @@ $facility_operating_hours = new ActiveDataProvider([
 
 \yii\web\YiiAsset::register($this);
 ?>
+
 <div class="container-fluid">
+<!--DIV not to be removed-->    
+<div id="output"></div>
     <div class="row" style="margin-right:-50px;margin-left:-50px;">
         <div class="col-lg-12">
             <div class="card card-primary card-outline">
@@ -435,38 +440,42 @@ $facility_operating_hours = new ActiveDataProvider([
                                             ->cache(Yii::$app->params['cache_duration'])
                                             ->all();
                                     ?>
-                                    <p class="text-sm">Average Facility rating:
-                                        <?php
-                                        echo $rating . " " . StarRating::widget([
-                                            'name' => 'facility_rating',
-                                            'value' => $rating,
-                                            'pluginOptions' => [
-                                                'min' => 0,
-                                                'max' => 5,
-                                                'step' => 1,
-                                                'size' => 'sm',
-                                                'displayOnly' => true,
-                                                'starCaptions' => [
-                                                    0 => 'Not rated',
-                                                    1 => 'Very Poor',
-                                                    2 => 'Poor',
-                                                    3 => 'Average',
-                                                    4 => 'Good',
-                                                    5 => 'Very Good',
-                                                ],
-                                                'starCaptionClasses' => [
-                                                    0 => 'text-danger',
-                                                    1 => 'text-danger',
-                                                    2 => 'text-warning',
-                                                    3 => 'text-info',
-                                                    4 => 'text-primary',
-                                                    5 => 'text-success',
-                                                ],
-                                            ],
-                                        ]);
-                                        ?>
+                                    <table style="margin-top: 0px;">
+                                        <tr><td class="text-sm">Average Facility rating: <?= $rating ?> </td><td>
+                                                <?php
+                                                echo StarRating::widget([
+                                                    'name' => 'facility_rating',
+                                                    'value' => $rating,
+                                                    'pluginOptions' => [
+                                                        'min' => 0,
+                                                        'max' => 5,
+                                                        'step' => 1,
+                                                        'size' => 'xsm',
+                                                        'showClear' => false,
+                                                        'showCaption' => true,
+                                                        'displayOnly' => true,
+                                                        'starCaptions' => [
+                                                            0 => 'Not rated',
+                                                            1 => 'Very Poor',
+                                                            2 => 'Poor',
+                                                            3 => 'Average',
+                                                            4 => 'Good',
+                                                            5 => 'Very Good',
+                                                        ],
+                                                        'starCaptionClasses' => [
+                                                            0 => 'text-danger',
+                                                            1 => 'text-danger',
+                                                            2 => 'text-warning',
+                                                            3 => 'text-info',
+                                                            4 => 'text-primary',
+                                                            5 => 'text-success',
+                                                        ],
+                                                    ],
+                                                ]);
+                                                ?>
 
-                                    </p>
+                                            </td></tr>
+                                    </table>
                                     <hr class="dotted short">
                                     <?php
                                     if (!empty($rate_type_model)) {
@@ -475,6 +484,15 @@ $facility_operating_hours = new ActiveDataProvider([
                                         echo "<p class='text-sm'>Stars represent levels of satisfaction i.e. 5 (Very Good), 4 (Good), 3 (Average), 2 (Poor), 1 (Very Poor)</p>";
                                         echo ' <div class="row">';
                                         foreach ($rate_type_model as $_rate_model) {
+                                            //We get the count and sum of the facility ratings per rate type
+                                            $facility_ratetype_rate_count = \backend\models\MFLFacilityRatings::find()
+                                                            ->cache(Yii::$app->params['cache_duration'])
+                                                            ->where(['facility_id' => $model->id, 'rate_type_id' => $_rate_model['id']])->count();
+                                            $facility_ratetype_rates_sum = \backend\models\MFLFacilityRatings::find()
+                                                    ->cache(Yii::$app->params['cache_duration'])
+                                                    ->where(['facility_id' => $model->id, 'rate_type_id' => $_rate_model['id']])
+                                                    ->sum('rate_value');
+                                            $facility_ratetype_rating = !empty($facility_ratetype_rate_count) && !empty($facility_ratetype_rates_sum) ? $facility_ratetype_rates_sum / $facility_ratetype_rate_count : 0;
                                             echo ' <div class="col-md-4">';
                                             echo '<p>' . $count . "." . $_rate_model['name'] . "</p>";
                                             ?>
@@ -492,9 +510,103 @@ $facility_operating_hours = new ActiveDataProvider([
                                                 </div>
                                                 <!-- /.card-header -->
                                                 <div class="card-body">
-                                                    <p>Average rating: 0.00<br>
-                                                        Number of ratings: 0 </p>
+                                                    
+                                                    <table style="margin-top: 0px;">
+                                                        <tr><td class="text-sm">Average rating: <?= $facility_ratetype_rating ?></td><td>
+                                                                <?php
+                                                                echo StarRating::widget([
+                                                                    'name' => 'facility_rating',
+                                                                    'value' => $facility_ratetype_rating,
+                                                                    'pluginOptions' => [
+                                                                        'min' => 0,
+                                                                        'max' => 5,
+                                                                        'step' => 1,
+                                                                        'size' => 'xsm',
+                                                                        'showClear' => false,
+                                                                        'showCaption' => false,
+                                                                        'displayOnly' => true,
+                                                                        'starCaptions' => [
+                                                                            0 => 'Not rated',
+                                                                            1 => 'Very Poor',
+                                                                            2 => 'Poor',
+                                                                            3 => 'Average',
+                                                                            4 => 'Good',
+                                                                            5 => 'Very Good',
+                                                                        ],
+                                                                        'starCaptionClasses' => [
+                                                                            0 => 'text-danger',
+                                                                            1 => 'text-danger',
+                                                                            2 => 'text-warning',
+                                                                            3 => 'text-info',
+                                                                            4 => 'text-primary',
+                                                                            5 => 'text-success',
+                                                                        ],
+                                                                    ],
+                                                                ]);
+                                                                ?>
+                                                            </td></tr>
+                                                    </table>
+                                                    <span class="text-sm">Total ratings: <?= $facility_ratetype_rate_count ?></span>
+                                                    <hr class="dotted short">
+                                                    <?php
+                                                    $facility_rating_model = new backend\models\MFLFacilityRatings();
+                                                    $form = ActiveForm::begin([
+                                                                'id' => 'add-form' . $_rate_model['id'],
+                                                                'enableClientValidation' => false
+                                                    ]);
+                                                    echo $form->field($facility_rating_model, 'facility_id')->hiddenInput(['value' => $model->id])->label(false);
+                                                    echo $form->field($facility_rating_model, 'rate_type_id')->hiddenInput(['value' => $_rate_model['id']])->label(false);
+                                                    echo $form->field($facility_rating_model, '[' . $_rate_model['id'] . ']rating')->widget(StarRating::classname(), [
+                                                        'name' => 'facility_rating' . $_rate_model['id'],
+                                                        'pluginOptions' => [
+                                                            'step' => 1,
+                                                            'min' => 0,
+                                                            'max' => 5,
+                                                            'size' => 'sm',
+                                                            'showClear' => false,
+                                                            //'showCaption' => false,
+                                                            'starCaptions' => [
+                                                                0 => 'Not rated',
+                                                                1 => 'Very Poor',
+                                                                2 => 'Poor',
+                                                                3 => 'Average',
+                                                                4 => 'Good',
+                                                                5 => 'Very Good',
+                                                            ],
+                                                            'starCaptionClasses' => [
+                                                                0 => 'text-danger',
+                                                                1 => 'text-danger',
+                                                                2 => 'text-warning',
+                                                                3 => 'text-info',
+                                                                4 => 'text-primary',
+                                                                5 => 'text-success',
+                                                            ],
+                                                        ]
+                                                    ]);
+
+
+                                                    echo $form->field($facility_rating_model, 'email')->textInput(['maxlength' => true, 'placeholder' =>
+                                                        'Your email address', 'required' => false,]);
+                                                    echo $form->field($facility_rating_model, 'comment')->textarea(['rows' => 2, 'placeholder' =>
+                                                        'Leave your comments'])->label("Comments ");
+
+                                                    AjaxSubmitButton::begin([
+                                                        'label' => 'Rate facility',
+                                                        'useWithActiveForm' => 'add-form' . $_rate_model['id'],
+                                                        'ajaxOptions' => [
+                                                            'url' => 'rating',
+                                                            'type' => 'POST',
+                                                            'success' => new \yii\web\JsExpression('function(html){
+                                                            $("#output").html(html);
+                                                            }'),
+                                                        ],
+                                                        'options' => ['class' => 'btn btn-primary btn-sm', 'type' => 'submit', 'id' => 'add-button'],
+                                                    ]);
+                                                    AjaxSubmitButton::end();
+                                                    ?>
+                                                    <?php ActiveForm::end(); ?>
                                                 </div>
+
                                                 <!-- /.card-body -->
                                             </div>
                                             <!-- /.card -->
@@ -508,6 +620,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                     echo "<p class='text-sm'>You cannot rate facility.There are no rate types at the moment!</p>";
                                 }
                                 ?>
+
                             </div>
                         </div>
                     </div>

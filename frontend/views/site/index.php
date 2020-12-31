@@ -584,8 +584,8 @@ $model
                                     echo Html::hiddenInput('selected_id', $MFLFacility_model->isNewRecord ? '' : $MFLFacility_model->district_id, ['id' => 'selected_id']);
 
                                     echo $form->field($MFLFacility_model, 'district_id')->widget(DepDrop::classname(), [
-                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,],
-                                        'data' => [backend\models\Districts::getListByProvinceID($MFLFacility_model->province_id)],
+                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,'prompt' => 'Filter by district'],
+                                        //'data' => [backend\models\Districts::getListByProvinceID($MFLFacility_model->province_id)],
                                         //'value'=>$MFLFacility_model->district_id,
                                         'type' => DepDrop::TYPE_SELECT2,
                                         'pluginOptions' => [
@@ -597,7 +597,7 @@ $model
                                             'loadingText' => 'Loading districts....',
                                         ]
                                     ]);
-//  }
+
                                     ?>
                                 </div>
                                 <div class="col-lg-12">

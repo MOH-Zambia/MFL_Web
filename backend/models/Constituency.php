@@ -39,8 +39,8 @@ class Constituency extends \yii\db\ActiveRecord {
         return [
             [['name', 'geom','district_id'], 'required'],
             [['population', 'pop_density', 'area_sq_km'], 'number'],
-            [['geom'], 'string'],
-            [['province_id'], 'safe'],
+           // [['geom'], 'string'],
+            [['province_id','geom'], 'safe'],
             [['district_id'], 'default', 'value' => null],
             [['district_id'], 'integer'],
             [['name'], 'string', 'max' => 50],

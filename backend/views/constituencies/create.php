@@ -5,16 +5,15 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Constituency */
 
-$this->title = 'Create Constituency';
+$this->title = 'Add Constituency';
 $this->params['breadcrumbs'][] = ['label' => 'Constituencies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="constituency-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="card card-primary card-outline">
+    <div class="card-body">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
+</div>
 </div>

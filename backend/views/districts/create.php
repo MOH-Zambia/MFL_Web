@@ -5,16 +5,16 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Districts */
 
-$this->title = 'Create Districts';
+$this->title = 'Add District';
 $this->params['breadcrumbs'][] = ['label' => 'Districts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="districts-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="card card-primary card-outline">
+    <div class="card-body">
 
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
+</div>
 </div>

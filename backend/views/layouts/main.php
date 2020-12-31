@@ -21,6 +21,23 @@ $session = Yii::$app->session;
         <link rel="icon" type="image/png" sizes="96x96" href="<?= Url::to('@web/img/coa.png') ?>">
         <?php $this->registerCsrfMetaTags() ?>
         <title>MFL | <?= Html::encode($this->title) ?></title>
+
+        <!-- Leaflet kernel -->
+        <link  href="<?= Url::to('@web/leaflet/leaflet.css') ?>" rel="stylesheet" />
+        <script src="<?= Url::to('@web/leaflet/leaflet-src.js') ?>"></script>
+
+        <!-- Draw & Snap plugins -->
+        <link  href="<?= Url::to('@web/leaflet/leaflet.draw.css') ?>" rel="stylesheet" />
+        <script src="<?= Url::to('@web/leaflet/leaflet.draw-src.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.geometryutil.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.snap.js') ?>"></script>
+
+        <!-- Plugins to import GPX files for test purpose -->
+        <script src="<?= Url::to('@web/leaflet/togeojson.js') ?>"></script>
+        <script src="<?= Url::to('@web/leaflet/leaflet.filelayer.js') ?>"></script>
+
+        <!-- This plugin -->
+        <script src="<?= Url::to('@web/leaflet/Control.Draw.Plus.js') ?>"></script>
         <?php $this->head() ?>
     </head>
     <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed  sidebar-collapse text-sm">
@@ -130,7 +147,7 @@ $session = Yii::$app->session;
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <?php
-                                    if (User::userIsAllowedTo("Manage facilities") || 
+                                    if (User::userIsAllowedTo("Manage facilities") ||
                                             User::userIsAllowedTo("View facilities")) {
                                         echo '   <li class="nav-item">';
                                         if (Yii::$app->controller->id == "facility" &&
@@ -439,6 +456,8 @@ $session = Yii::$app->session;
                                         echo '<li class="nav-item">';
                                         if (Yii::$app->controller->id == "provinces" &&
                                                 (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
                                                 Yii::$app->controller->action->id == "view")) {
                                             echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Provinces</p>', ['/provinces/index'], ["class" => "nav-link active"]);
                                         } else {
@@ -451,6 +470,8 @@ $session = Yii::$app->session;
                                         echo '   <li class="nav-item">';
                                         if (Yii::$app->controller->id == "districts" &&
                                                 (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
                                                 Yii::$app->controller->action->id == "view")) {
                                             echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Districts</p>', ['/districts/index'], ["class" => "nav-link active"]);
                                         } else {
@@ -462,6 +483,8 @@ $session = Yii::$app->session;
                                         echo '   <li class="nav-item">';
                                         if (Yii::$app->controller->id == "constituencies" &&
                                                 (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
                                                 Yii::$app->controller->action->id == "view")) {
                                             echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Constituencies</p>', ['/constituencies/index'], ["class" => "nav-link active"]);
                                         } else {
@@ -472,7 +495,10 @@ $session = Yii::$app->session;
                                     if (User::userIsAllowedTo("Manage wards")) {
                                         echo '   <li class="nav-item">';
                                         if (Yii::$app->controller->id == "wards" &&
-                                                (Yii::$app->controller->action->id == "index" ||
+                                                (
+                                                Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
                                                 Yii::$app->controller->action->id == "view")) {
                                             echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Wards</p>', ['/wards/index'], ["class" => "nav-link active"]);
                                         } else {

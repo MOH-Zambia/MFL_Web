@@ -24,8 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <p>
             <?php
             if (User::userIsAllowedTo('Manage districts')) {
-                echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
-                    return false;"><i class="fa fa-plus"></i> Add District</button>';
+                // echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
+                // return false;"><i class="fa fa-plus"></i> Add District</button>';
+                echo Html::a('<i class="fa fa-plus"></i> Add District', ['create'], ['class' => 'btn btn-sm btn-primary']);
                 echo '<hr class="dotted short">';
             }
             ?>
@@ -51,7 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'size' => PopoverX::SIZE_MEDIUM,
                     'options' => ['data' => \backend\models\Provinces::getProvinceList(),],
                     'inputType' => Editable::INPUT_SELECT2,
-                    
                 ],
                 'value' => function ($model) {
                     $name = backend\models\Provinces::findOne($model->province_id)->name;
@@ -75,7 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'size' => PopoverX::SIZE_MEDIUM,
                     'options' => ['data' => \backend\models\DistrictType::getList(),],
                     'inputType' => Editable::INPUT_SELECT2,
-                    
                 ],
                 'value' => function ($model) {
                     $name = backend\models\DistrictType::findOne($model->district_type_id)->name;
@@ -139,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'geom',
             ['class' => ActionColumn::className(),
                 'options' => ['style' => 'width:130px;'],
-                'template' => '{view}{delete}',
+                'template' => '{view}{update}{delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a(
@@ -152,6 +151,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'class' => 'bt btn-lg'
                                         ]
                         );
+                    },
+                    'update' => function ($url, $model) {
+                        if (User::userIsAllowedTo('Manage districts')) {
+                            return Html::a(
+                                            '<span class="fas fa-edit"></span>', ['update', 'id' => $model->id], [
+                                        'title' => 'Update all details',
+                                        'data-toggle' => 'tooltip',
+                                        'data-placement' => 'top',
+                                        'data-pjax' => '0',
+                                        'style' => "padding:5px;",
+                                        'class' => 'bt btn-lg'
+                                            ]
+                            );
+                        }
                     },
                     'delete' => function ($url, $model) {
                         if (User::userIsAllowedTo('Remove districts')) {

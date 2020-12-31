@@ -26,8 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <p>
             <?php
             if (User::userIsAllowedTo('Manage constituencies')) {
-                echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
-                    return false;"><i class="fa fa-plus"></i> Add Constituency</button>';
+                // echo '<button class="btn btn-primary btn-sm" href="#" onclick="$(\'#addNewModal\').modal(); 
+                //   return false;"><i class="fa fa-plus"></i> Add Constituency</button>';
+                echo Html::a('<i class="fa fa-plus"></i> Add Constituency', ['create'], ['class' => 'btn btn-sm btn-primary']);
                 echo '<hr class="dotted short">';
             }
             ?>
@@ -69,7 +70,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'size' => PopoverX::SIZE_MEDIUM,
                     'options' => ['data' => \backend\models\Districts::getList(),],
                     'inputType' => Editable::INPUT_SELECT2,
-                   
                 ],
                 'value' => function ($model) {
                     $name = backend\models\Districts::findOne($model->district_id)->name;
@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'geom',
             ['class' => ActionColumn::className(),
                 'options' => ['style' => 'width:130px;'],
-                'template' => '{view}{delete}',
+                'template' => '{view}{update}{delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a(
@@ -146,6 +146,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'class' => 'bt btn-lg'
                                         ]
                         );
+                    },
+                    'update' => function ($url, $model) {
+                        if (User::userIsAllowedTo('Manage constituencies')) {
+                            return Html::a(
+                                            '<span class="fas fa-edit"></span>', ['update', 'id' => $model->id], [
+                                        'title' => 'Update all details',
+                                        'data-toggle' => 'tooltip',
+                                        'data-placement' => 'top',
+                                        'data-pjax' => '0',
+                                        'style' => "padding:5px;",
+                                        'class' => 'bt btn-lg'
+                                            ]
+                            );
+                        }
                     },
                     'delete' => function ($url, $model) {
                         if (User::userIsAllowedTo('Remove constituencies')) {

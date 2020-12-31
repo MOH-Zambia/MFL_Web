@@ -37,7 +37,7 @@ class Provinces extends \yii\db\ActiveRecord {
             [['population'], 'default', 'value' => null],
             [['population'], 'integer'],
             [['pop_density', 'area_sq_km'], 'number'],
-            [['geom'], 'string'],
+            [['geom'], 'safe'],
             [['name'], 'string', 'max' => 64],
             ['name', 'unique', 'message' => 'Province name exist already!'],
         ];

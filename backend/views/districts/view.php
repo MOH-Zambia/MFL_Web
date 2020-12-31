@@ -24,16 +24,54 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Districts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+//We assume facility operation status name "Operational" 
+//will never be renamed/deleted otherwise the system breaks
+$operation_status_model = \backend\models\Operationstatus::findOne(['name' => "Operational"]);
+
+if (!empty($operation_status_model)) {
+    $opstatus_id = $operation_status_model->id;
+    //We now get the facilities in the district
+    $facilities_counts = backend\models\MFLFacility::find()
+                    ->cache(Yii::$app->params['cache_duration'])
+                    ->select(["COUNT(*) as count", "facility_type_id"])
+                    ->where(['operation_status_id' => $opstatus_id])
+                    ->andWhere(['district_id' => $model->id])
+                    ->groupBy(['facility_type_id'])
+                    ->createCommand()->queryAll();
+}
+
+
+
+//We build the window string
+$type_str = "";
+foreach ($facilities_counts as $f_model) {
+    $facility_type = !empty($f_model['facility_type_id']) ? backend\models\Facilitytype::findOne($f_model['facility_type_id'])->name : "";
+    $type_str .= $facility_type . ":<b>" . $f_model['count'] . "</b><br>";
+}
 ?>
 <div class="card card-primary card-outline">
     <div class="card-body">
         <p>
             <?php
+            if (User::userIsAllowedTo('Manage districts')) {
+                echo Html::a(
+                        '<span class="fas fa-edit fa-2x"></span>', ['update', 'id' => $model->id],
+                        [
+                            'title' => 'Update district',
+                            'data-toggle' => 'tooltip',
+                            'data-placement' => 'top',
+                            'data-pjax' => '0',
+                            'style' => "padding:5px;",
+                            'class' => 'bt btn-lg'
+                        ]
+                );
+            }
             if (User::userIsAllowedTo('Remove districts')) {
 
                 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 echo Html::a('<i class="fas fa-trash fa-2x"></i>', ['delete', 'id' => $model->id], [
-                    'title' => 'Remove province',
+                    'title' => 'Remove district',
                     'data-placement' => 'top',
                     'data-toggle' => 'tooltip',
                     'data' => [
@@ -97,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $center = round(count($coord) / 2);
                     $center_coords = $coord[$center];
                 }
-                if (!empty($center_coords)) {
+               /* if (!empty($center_coords)) {
                     $coord = new LatLng([
                         'lat' => $center_coords[1],
                         'lng' => $center_coords[0]
@@ -127,10 +165,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]));
 
                 $map->addOverlay($polygon);
-                echo $map->display();
+                echo $map->display();*/
                 ?>
+                <div id="map" style="width: 100%; height: 500px"></div>
             </div>
         </div>
 
     </div>
 </div>
+<script>
+var myvar = <?php echo json_encode($model->name); ?>;
+var facility_types=<?php echo json_encode($type_str); ?>;
+
+<?php
+echo 'var center=[' . $center_coords[1] . ',' . $center_coords[0] . ']';
+?> 
+var map = L.map('map').setView(center, 8);
+
+L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; MoH-MFL, <a href="http://osm.org/copyright">OpenStreetMap</a>; contributors'
+}).addTo(map);
+<?php
+if (!empty($model->geom)) {
+    echo 'var polygon =[';
+    //echo 'var latlngs ='. GuzzleHttp\json_encode(json_decode($model->geom, true)['coordinates'][0][0]);
+    foreach (json_decode($model->geom, true)['coordinates'][0][0] as $point) {
+        echo '[' . $point[1] . "," . $point[0] . "], ";
+    }
+    echo "];\n";
+} else {
+    echo 'var polygon =[];';
+}
+?> 
+
+var poly = L.polygon(polygon,{color: 'red'}).addTo(map);
+poly.bindPopup("<p><strong><span class='text-center'>"+myvar+" District operational facilities</span></strong></p><hr>"+facility_types);
+</script>

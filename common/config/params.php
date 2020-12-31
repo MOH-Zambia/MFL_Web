@@ -24,5 +24,5 @@ return [
     'polygon_zoom'=>6,
     'polygon_strokeColor'=>'#FF0000',
     'polygon_strokeColor'=>'#FF0000',
-    'cache_duration'=>3600
+    'cache_duration'=>60
 ];
