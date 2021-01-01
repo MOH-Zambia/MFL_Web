@@ -19,6 +19,7 @@ use dosamigos\google\maps\layers\BicyclingLayer;
 use kartik\form\ActiveForm;
 use \yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
+use kartik\widgets\StarRating;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\MFLFacility */
@@ -53,11 +54,24 @@ $facility_operating_hours = new ActiveDataProvider([
         ]);
 
 \yii\web\YiiAsset::register($this);
+
+
+$facility_rate_count = \backend\models\MFLFacilityRatings::find()
+                ->cache(Yii::$app->params['cache_duration'])
+                ->where(['facility_id' => $model->id])->count();
+$facility_rates_sum = \backend\models\MFLFacilityRatings::find()
+        ->cache(Yii::$app->params['cache_duration'])
+        ->where(['facility_id' => $model->id])
+        ->sum('rate_value');
+$rating = !empty($facility_rate_count) && !empty($facility_rates_sum) ? $facility_rates_sum / $facility_rate_count : 0;
+$rating_model = new \backend\models\MFLFacilityRatings();
+$rate_type_model = \backend\models\MFLFacilityRateTypes::find()
+        ->cache(Yii::$app->params['cache_duration'])
+        ->all();
 ?>
 <div class="card card-primary card-outline">
-    <div class="card-body">
-
-        <p>
+    <div class="card-header border-transparent">
+        <h3 class="card-title">
             <?php
             if (User::userIsAllowedTo('Manage facilities')) {
                 echo Html::a('<i class="fas fa-pencil-alt fa-2x"></i>', ['update', 'id' => $model->id], [
@@ -81,7 +95,49 @@ $facility_operating_hours = new ActiveDataProvider([
                 ]);
             }
             ?>
-        </p>
+        </h3>
+
+        <div class="card-tools">
+            <table style="margin-top: 0px;">
+                <tr><td class="text-sm">Average Facility rating: <?= $rating ?> </td><td>
+                        <?php
+                        echo StarRating::widget([
+                            'name' => 'facility_rating',
+                            'value' => $rating,
+                            'pluginOptions' => [
+                                'min' => 0,
+                                'max' => 5,
+                                'step' => 1,
+                                'size' => 'xsm',
+                                'showClear' => false,
+                                'showCaption' => true,
+                                'displayOnly' => true,
+                                'starCaptions' => [
+                                    0 => 'Not rated',
+                                    1 => 'Very Poor',
+                                    2 => 'Poor',
+                                    3 => 'Average',
+                                    4 => 'Good',
+                                    5 => 'Very Good',
+                                ],
+                                'starCaptionClasses' => [
+                                    0 => 'text-danger',
+                                    1 => 'text-danger',
+                                    2 => 'text-warning',
+                                    3 => 'text-info',
+                                    4 => 'text-primary',
+                                    5 => 'text-success',
+                                ],
+                            ],
+                        ]);
+                        ?>
+
+                    </td></tr>
+            </table>
+        </div>
+    </div>
+    <div class="card-body">
+
         <?php
         //This is a hack, just to use pjax for the delete confirm button
         $query = User::find()->where(['id' => '-2']);
@@ -315,17 +371,17 @@ $facility_operating_hours = new ActiveDataProvider([
                                 }
                                 $map = new Map([
                                     'center' => $coord,
-                                     'streetViewControl' => false,
-                                      'mapTypeControl' => true,
+                                    'streetViewControl' => false,
+                                    'mapTypeControl' => true,
                                     'zoom' => 10,
-                                    'width' => '100%', 
+                                    'width' => '100%',
                                     'height' => 500,
                                 ]);
                                 if (!empty($model->geom)) {
                                     $marker = new Marker([
                                         'position' => $coord,
                                         'title' => $model->name,
-                                         'icon' => \yii\helpers\Url::to('@web/img/map_icon.png')
+                                        'icon' => \yii\helpers\Url::to('@web/img/map_icon.png')
                                     ]);
 
                                     $marker->attachInfoWindow(
@@ -376,7 +432,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                                 ],
                                                 ['class' => ActionColumn::className(),
                                                     'template' => '{delete}',
-                                                    'buttons' => [  
+                                                    'buttons' => [
                                                         'delete' => function ($url, $facility_operating_hours) {
                                                             if (User::userIsAllowedTo('Remove facility')) {
                                                                 return Html::a(
@@ -449,7 +505,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                                 ],
                                                 ['class' => ActionColumn::className(),
                                                     'template' => '{delete}',
-                                                    'buttons' => [ 
+                                                    'buttons' => [
                                                         'delete' => function ($url, $facility_services) {
                                                             if (User::userIsAllowedTo('Remove facility')) {
                                                                 return Html::a(
