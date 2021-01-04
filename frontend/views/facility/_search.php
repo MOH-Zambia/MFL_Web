@@ -91,14 +91,15 @@ $form = ActiveForm::begin([
         echo Html::hiddenInput('selected_id', $model->isNewRecord ? '' : $model->district_id, ['id' => 'selected_id']);
 
         echo $form->field($model, 'district_id')->widget(DepDrop::classname(), [
-            'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false, 'prompt' => 'Filter by district'],
-           // 'data' => [backend\models\Districts::getListByProvinceID($model->province_id)],
+            'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,],
+           //'data' => [backend\models\Districts::getListByProvinceID($model->province_id)],
             //'value'=>$MFLFacility_model->district_id,
             'type' => DepDrop::TYPE_SELECT2,
             'pluginOptions' => [
                 'depends' => ['prov_id'],
                 'initialize' => $model->isNewRecord ? false : true,
                 'placeholder' => 'Filter by district',
+                'prompt' => 'Filter by district',
                 'url' => Url::to(['/site/district']),
                 'params' => ['selected_id'],
                 'loadingText' => 'Loading districts....',
@@ -112,13 +113,14 @@ $form = ActiveForm::begin([
         $model->isNewRecord = !empty($_GET['MFLFacilitySearch']['district_id']) ? false : true;
         echo Html::hiddenInput('selected_id2', $model->isNewRecord ? '' : $model->constituency_id, ['id' => 'selected_id2']);
         echo $form->field($model, 'constituency_id')->widget(DepDrop::classname(), [
-            'options' => ['id' => 'constituency_id', 'custom' => true, 'prompt' => 'Filter by constituency'],
+            'options' => ['id' => 'constituency_id', 'custom' => true,],
            // 'data' => [\backend\models\Constituency::getListByDistrictID($model->district_id)],
             'type' => DepDrop::TYPE_SELECT2,
             'pluginOptions' => [
                 'depends' => ['dist_id'],
                 'initialize' => $model->isNewRecord ? false : true,
                 'placeholder' => 'Filter by constituency',
+                'prompt' => 'Filter by constituency',
                 'url' => Url::to(['/site/constituency']),
                 'params' => ['selected_id2'],
                 'loadingText' => 'Loading constituencies....',
@@ -131,13 +133,14 @@ $form = ActiveForm::begin([
         $model->isNewRecord = !empty($_GET['MFLFacilitySearch']['district_id']) ? false : true;
         echo Html::hiddenInput('selected_id3', $model->isNewRecord ? '' : $model->ward_id, ['id' => 'selected_id3']);
         echo $form->field($model, 'ward_id')->widget(DepDrop::classname(), [
-            'options' => ['id' => 'ward_id', 'custom' => true, 'prompt' => 'Filter by ward'],
+            'options' => ['id' => 'ward_id', 'custom' => true, ],
             //'data' => [\backend\models\Wards::getListByDistrictID($model->district_id)],
             'type' => DepDrop::TYPE_SELECT2,
             'pluginOptions' => [
                 'depends' => ['dist_id'],
                 'initialize' => $model->isNewRecord ? false : true,
                 'placeholder' => 'Filter by ward',
+                'prompt' => 'Filter by ward',
                 'url' => Url::to(['/site/ward']),
                 'params' => ['selected_id3'],
                 'loadingText' => 'Loading wards....',

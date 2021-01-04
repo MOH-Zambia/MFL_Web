@@ -110,7 +110,7 @@ class SiteController extends Controller {
         } else {
             if (!empty(Yii::$app->request->queryParams['MFLFacility']) &&
                     Yii::$app->request->queryParams['filter'] == "true") {
-                Yii::$app->session->setFlash('error', 'Please pick a filter to filter!');
+                Yii::$app->session->setFlash('error', 'Please pick a filter to filter on the map!');
             }
             $dataProvider = "";
         }

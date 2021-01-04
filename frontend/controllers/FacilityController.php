@@ -70,6 +70,7 @@ class FacilityController extends Controller {
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['constituency_id']) ||
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ward_id']) ||
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['ownership_id']) ||
+                !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['name']) ||
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['province_id']) ||
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['facility_type_id']) ||
                 !empty(Yii::$app->request->queryParams['MFLFacilitySearch']['operation_status_id']) ||

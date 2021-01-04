@@ -135,37 +135,37 @@ foreach ($facilities_counts as $f_model) {
                     $center = round(count($coord) / 2);
                     $center_coords = $coord[$center];
                 }
-               /* if (!empty($center_coords)) {
-                    $coord = new LatLng([
-                        'lat' => $center_coords[1],
-                        'lng' => $center_coords[0]
-                    ]);
-                } else {
-                    $coord = new LatLng([
-                        'lat' => Yii::$app->params['center_lat'],
-                        'lng' => Yii::$app->params['center_lng']
-                    ]);
-                }
-                $map = new Map([
-                    'center' => $coord,
-                    'zoom' => 8,
-                    'width' => '100%', 'height' => 500,
-                ]);
-                $polygon = new Polygon([
-                    'paths' => $coords,
-                    'strokeColor' => Yii::$app->params['polygon_strokeColor'],
-                    'strokeOpacity' => 0.8,
-                    'strokeWeight' => 2,
-                    'fillColor' => Yii::$app->params['polygon_strokeColor'],
-                    'fillOpacity' => 0.35,
-                ]);
+                /* if (!empty($center_coords)) {
+                  $coord = new LatLng([
+                  'lat' => $center_coords[1],
+                  'lng' => $center_coords[0]
+                  ]);
+                  } else {
+                  $coord = new LatLng([
+                  'lat' => Yii::$app->params['center_lat'],
+                  'lng' => Yii::$app->params['center_lng']
+                  ]);
+                  }
+                  $map = new Map([
+                  'center' => $coord,
+                  'zoom' => 8,
+                  'width' => '100%', 'height' => 500,
+                  ]);
+                  $polygon = new Polygon([
+                  'paths' => $coords,
+                  'strokeColor' => Yii::$app->params['polygon_strokeColor'],
+                  'strokeOpacity' => 0.8,
+                  'strokeWeight' => 2,
+                  'fillColor' => Yii::$app->params['polygon_strokeColor'],
+                  'fillOpacity' => 0.35,
+                  ]);
 
-                $polygon->attachInfoWindow(new InfoWindow([
-                            'content' => '<p>' . $model->name . ' District</p>'
-                ]));
+                  $polygon->attachInfoWindow(new InfoWindow([
+                  'content' => '<p>' . $model->name . ' District</p>'
+                  ]));
 
-                $map->addOverlay($polygon);
-                echo $map->display();*/
+                  $map->addOverlay($polygon);
+                  echo $map->display(); */
                 ?>
                 <div id="map" style="width: 100%; height: 500px"></div>
             </div>

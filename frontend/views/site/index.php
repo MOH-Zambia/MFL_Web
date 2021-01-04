@@ -341,6 +341,8 @@ $model
                             $filter_str = "Search results for: ";
                             $counter = 0;
                             $colors = ["#ed5151", "#149ece", "#a7c636", "#9e559c", "#fc921f", "purple", "#006D2C", ' #2a4858', '#fafa6e', 'lime'];
+
+                            //Default map settings
                             $coord = new LatLng([
                                 'lat' => -13.445529118205,
                                 'lng' => 28.983639375
@@ -352,8 +354,71 @@ $model
                                 'width' => '100%', 'height' => 500,
                             ]);
 
+                            //We set the map settings based on the province/distric search
+                            //1. By province
+                            if (isset($_GET['MFLFacility']['province_id']) &&
+                                    !empty($_GET['MFLFacility']['province_id'])) {
+                                $prov_model = \backend\models\Provinces::find()->cache(Yii::$app->params['cache_duration'])
+                                                ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km', 'ST_AsGeoJSON(geom) as geom'])
+                                                ->where(["id" => $_GET['MFLFacility']['province_id']])->one();
+
+                                if (!empty($prov_model)) {
+                                    $coords = \backend\models\Provinces::getCoordinates(json_decode($prov_model->geom, true)['coordinates']);
+                                    $coord = json_decode($prov_model->geom, true)['coordinates'][0][0];
+                                    $center = round(count($coord) / 2);
+                                    $center_coords = $coord[$center];
+                                    if (!empty($center_coords)) {
+                                        $coord = new LatLng([
+                                            'lat' => $center_coords[1],
+                                            'lng' => $center_coords[0]
+                                        ]);
+                                    } else {
+                                        $coord = new LatLng([
+                                            'lat' => Yii::$app->params['center_lat'],
+                                            'lng' => Yii::$app->params['center_lng']
+                                        ]);
+                                    }
+                                    $map = new Map([
+                                        'center' => $coord,
+                                        'zoom' => 8,
+                                        'width' => '100%', 'height' => 500,
+                                    ]);
+                                }
+                            }
+                            //2. By district
+                            if (isset($_GET['MFLFacility']['district_id']) &&
+                                    !empty($_GET['MFLFacility']['district_id'])) {
+                                $prov_model = \backend\models\Districts::find()->cache(Yii::$app->params['cache_duration'])
+                                                ->select(['id', 'name', 'population', 'pop_density', 'area_sq_km', 'ST_AsGeoJSON(geom) as geom'])
+                                                ->where(["id" => $_GET['MFLFacility']['district_id']])->one();
+
+                                if (!empty($prov_model)) {
+                                    $coords = \backend\models\Districts::getCoordinates(json_decode($prov_model->geom, true)['coordinates']);
+                                    $coord = json_decode($prov_model->geom, true)['coordinates'][0][0];
+                                    $center = round(count($coord) / 2);
+                                    $center_coords = $coord[$center];
+                                    if (!empty($center_coords)) {
+                                        $coord = new LatLng([
+                                            'lat' => $center_coords[1],
+                                            'lng' => $center_coords[0]
+                                        ]);
+                                    } else {
+                                        $coord = new LatLng([
+                                            'lat' => Yii::$app->params['center_lat'],
+                                            'lng' => Yii::$app->params['center_lng']
+                                        ]);
+                                    }
+                                    $map = new Map([
+                                        'center' => $coord,
+                                        'zoom' => 10,
+                                        'width' => '100%', 'height' => 500,
+                                    ]);
+                                }
+                            }
+
+
                             //Show the filter parameters
-                            if (isset($_GET['MFLFacility']) && $dataProvider->getTotalCount() > 0) {
+                            if (isset($_GET['MFLFacility']) && (!empty($dataProvider) && $dataProvider->getTotalCount() > 0)) {
                                 if (!empty($_GET['MFLFacility']['province_id']) ||
                                         !empty($_GET['MFLFacility']['ownership_id']) ||
                                         !empty($_GET['MFLFacility']['facility_type_id']) ||
@@ -373,7 +438,7 @@ $model
                                     echo "<p class='text-sm'>$filter_str</p>";
                                 }
                             }
-                            if (isset($_GET['MFLFacility']) && $dataProvider->getTotalCount() == 0) {
+                            if (isset($_GET['MFLFacility']) && (!empty($dataProvider) && $dataProvider->getTotalCount() == 0)) {
                                 echo "<p class='text-sm'>No search results were found!</p>";
                             }
 
@@ -381,6 +446,10 @@ $model
                             if (isset($_GET['MFLFacility']['province_id']) &&
                                     !empty($_GET['MFLFacility']['province_id'])) {
                                 $MFLFacility_model->province_id = $_GET['MFLFacility']['province_id'];
+                            }
+                            if (isset($_GET['MFLFacility']['district_id']) &&
+                                    !empty($_GET['MFLFacility']['district_id'])) {
+                                $MFLFacility_model->district_id = $_GET['MFLFacility']['district_id'];
                             }
                             if (isset($_GET['MFLFacility']['ownership_id']) &&
                                     !empty($_GET['MFLFacility']['ownership_id'])) {
@@ -549,7 +618,7 @@ $model
                             ?>
                         </div>
                         <div class="col-lg-4 text-sm">
-                            <h4>Instructions</h4>
+                            <h4>Map Instructions</h4>
                             <ol>
                                 <li>Click province to view facility counts by type</li>
                                 <li>A filter below will show actual 
@@ -584,7 +653,7 @@ $model
                                     echo Html::hiddenInput('selected_id', $MFLFacility_model->isNewRecord ? '' : $MFLFacility_model->district_id, ['id' => 'selected_id']);
 
                                     echo $form->field($MFLFacility_model, 'district_id')->widget(DepDrop::classname(), [
-                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,'prompt' => 'Filter by district'],
+                                        'options' => ['id' => 'dist_id', 'custom' => true, 'required' => false,],
                                         //'data' => [backend\models\Districts::getListByProvinceID($MFLFacility_model->province_id)],
                                         //'value'=>$MFLFacility_model->district_id,
                                         'type' => DepDrop::TYPE_SELECT2,
@@ -592,12 +661,13 @@ $model
                                             'depends' => ['prov_id'],
                                             'initialize' => $MFLFacility_model->isNewRecord ? false : true,
                                             'placeholder' => 'Filter by district',
+                                            'prompt' => 'Filter by district',
                                             'url' => Url::to(['/site/district']),
+                                            'allowClear' => true,
                                             'params' => ['selected_id'],
                                             'loadingText' => 'Loading districts....',
                                         ]
                                     ]);
-
                                     ?>
                                 </div>
                                 <div class="col-lg-12">
@@ -616,7 +686,10 @@ $model
                                     );
                                     ?>
                                 </div>
-                                <?= Html::submitButton('Filter', ['class' => 'btn btn-primary btn-sm', 'name' => "filter", "value" => "true"]) ?>
+                                <div class="col-lg-12">
+                                    <?= Html::submitButton('Filter map', ['class' => 'btn btn-primary btn-sm', 'name' => "filter", "value" => "true"]) ?>
+                                    <?php //echo Html::resetButton('Reset', ['class' => 'btn btn-default btn-sm']) ?>
+                                </div>
                                 <?php ActiveForm::end(); ?>
 
                             </div>

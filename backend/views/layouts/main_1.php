@@ -26,7 +26,7 @@ AppAsset::register($this);
         <div class="wrapper">
 
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand-md navbar-light navbar-green ">
+            <nav class="main-header navbar navbar-expand-md navbar-light navbar-green " style="background: #158239">
                 <div class="container">
                     
                     <a class="navbar-brand" href="" target="blank">
@@ -74,12 +74,54 @@ AppAsset::register($this);
             
             <!-- /.navbar -->
             <!-- Main Footer -->
-            <footer class="main-footer">
-                <p class="text-center text-muted mt-md mb-md">
-                <!-- Default to the left -->
-                &copy; Copyright <?= date("Y"); ?> <a href="https://www.moh.gov.zm/" target="blank">
-                        - Master Facility List-MFL(MOH)</a>.
-                        All rights reserved.</p>
+             <footer style="background: #158239" class="main-footer navbar-light navbar-green brand-text text-white text-md font-weight-light">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-4">
+                                <h2 class="lead"><b>Contact us</b></h2>
+                                <ul class="ml-4 mb-0 fa-ul text-white ">
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-home"></i></span> Ndeke House, Longacres, Lusaka</li>
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> info@moh.gov.zm</li>
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> +260 211 253757</li>
+                                </ul>
+                            </div>
+                            <div class="col-4">
+                                <h2 class="lead"><b>Important links</b></h2>
+                                <ul class="ml-4 mb-0 fa-ul text-white">
+                                    <li class="small"><a class="text-white" href="https://www.moh.gov.zm/" target="blank">Ministry of Health</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.zicta.zm" target="blank">ZICTA</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.szi.gov.zm/" target="blank">Smart Zambia</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-4">
+                                <h2 class="lead"><b>Social media</b></h2>
+                                <div class="mt-4 product-share ">
+                                    <a href="https://facebook.com/mohzambia/" class="text-white">
+                                        <i class="fab fa-facebook-square fa-2x"></i>
+                                    </a>
+                                    <a href="https://twitter.com/moh_zambia" class="text-white">
+                                        <i class="fab fa-twitter-square fa-2x"></i>
+                                    </a>
+                                    <a href="www.youtube.com/" class="text-white">
+                                        <i class="fab fa-youtube-square fa-2x"></i>
+                                    </a>
+                                    <a href="https://github.com/MOH-Zambia/MFL" class="text-white">
+                                        <i class="fab fa-github-square fa-2x"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <hr class="dotted short">
+                    </div>
+                    <div class="col-lg-12 text-center text-sm">
+                        Copyright &copy; <?= date("Y") ?> - Master Facility List-
+                        <a class="text-white" href="https://www.moh.gov.zm/" target="blank">MoH</a>. All rights reserved.
+                    </div>
+                </div>
+
             </footer>
         </div>
 

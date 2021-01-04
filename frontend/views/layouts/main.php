@@ -41,7 +41,7 @@ AppAsset::register($this);
         <div class="wrapper">
 
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand-md navbar-light navbar-green navbar-fixed-top">
+            <nav class="main-header navbar navbar-expand-md navbar-light navbar-green navbar-fixed-top" style="background: #158239">
                 <div class="container">
 
                     <a class="navbar-brand" href="" target="blank">
@@ -141,7 +141,7 @@ AppAsset::register($this);
 
             <!-- /.navbar -->
             <!-- Main Footer -->
-            <footer class="main-footer navbar-light navbar-green brand-text text-white text-md font-weight-light">
+            <footer style="background: #158239" class="main-footer navbar-light navbar-green brand-text text-white text-md font-weight-light">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="row">

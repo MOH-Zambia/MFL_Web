@@ -103,11 +103,11 @@ $facility_operating_hours = new ActiveDataProvider([
                                             DetailView::widget([
                                                 'model' => $model,
                                                 'attributes' => [
-                                                    'DHIS2_UID',
-                                                    'HMIS_code',
-                                                    'smartcare_GUID',
-                                                    'eLMIS_ID',
-                                                    'iHRIS_ID',
+                                                    'name',
+                                                   // 'HMIS_code',
+                                                   // 'smartcare_GUID',
+                                                   // 'eLMIS_ID',
+                                                  //  'iHRIS_ID',
                                                     'catchment_population_head_count',
                                                     'catchment_population_cso',
                                                     [

@@ -44,7 +44,7 @@ $session = Yii::$app->session;
         <?php $this->beginBody() ?>
         <div class="wrapper">
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand navbar-green navbar-light" >
+            <nav class="main-header navbar navbar-expand navbar-green navbar-light" style="background: #158239">
                 <ul class="navbar-nav">
                     <li class="nav-item ">
                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars text-white"></i></a>
@@ -63,7 +63,7 @@ $session = Yii::$app->session;
                             <img src="<?= Url::to('@web/img/icon.png') ?>" class="user-image" alt="User Image">
                             <span class="hidden-xs"> <?= $session['user'] ?> </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right" style="background-color: #28a745;">
+                        <ul class="dropdown-menu dropdown-menu-right" style="background: #158239">
                             <!-- User image -->
                             <li class="user-header text-white">
                                 <img src="<?= Url::to('@web/img/icon.png') ?>" class="img-circle" alt="User Image">
@@ -92,9 +92,9 @@ $session = Yii::$app->session;
             <!-- /.navbar -->
 
             <!-- Main Sidebar Container -->
-            <aside class="main-sidebar sidebar-light-blue elevation-3">
+            <aside class="main-sidebar sidebar-light-blue elevation-3" >
                 <!-- Brand Logo -->
-                <a style="background-color: #28a745" class="brand-link" href="https://www.moh.gov.zm/" target="blank">
+                <a style="background: #158239" class="brand-link" href="https://www.moh.gov.zm/" target="blank">
                     <?=
                     Html::img('@web/img/coa.png', ["class" => "brand-image",
                         'style' => 'opacity: .9']);
