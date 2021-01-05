@@ -42,25 +42,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'enableSorting' => true,
                             'attribute' => 'name',
-                             'filter'=>false,
-                           /* 'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+                            'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
                             'filterWidgetOptions' => [
                                 'pluginOptions' => ['allowClear' => true],
                             ],
                             'filter' => \backend\models\MFLFacility::getNames(),
-                            'filterInputOptions' => ['prompt' => 'Filter by name', 'class' => 'form-control',],*/
+                            'filterInputOptions' => ['prompt' => 'Filter by name', 'class' => 'form-control',],
                             'format' => 'raw',
                         ],
                         [
                             'attribute' => 'province_id',
-                             'filter'=>false,
-                            /*'filterType' => GridView::FILTER_SELECT2,
+                            'filterType' => GridView::FILTER_SELECT2,
                             'filterWidgetOptions' => [
                                 'pluginOptions' => ['allowClear' => true],
                             ],
                             'filter' => true,
                             'filter' => \backend\models\Provinces::getProvinceList(),
-                            'filterInputOptions' => ['prompt' => 'Filter by Province', 'class' => 'form-control', 'id' => null],*/
+                            'filterInputOptions' => ['prompt' => 'Filter by Province', 'class' => 'form-control', 'id' => null],
                             'value' => function ($model) {
                                 $province_id = backend\models\Districts::findOne($model->district_id)->province_id;
                                 $name = backend\models\Provinces::findOne($province_id)->name;
@@ -69,15 +67,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute' => 'district_id',
-                            'filter'=>false,
-                          /*  'filterType' => GridView::FILTER_SELECT2,
+                            'filterType' => GridView::FILTER_SELECT2,
                             'filterWidgetOptions' => [
                                 'pluginOptions' => ['allowClear' => true],
                             ],
                             'filter' => \backend\models\Districts::getList(),
                             'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
-                          '*/
-                                'value' => function ($model) {
+                            'value' => function ($model) {
                                 $name = backend\models\Districts::findOne($model->district_id)->name;
                                 return $name;
                             },

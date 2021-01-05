@@ -12,8 +12,6 @@ use kartik\popover\PopoverX;
 
 $this->title = 'Audit logs';
 $this->params['breadcrumbs'][] = $this->title;
-
-
 ?>
 <div class="card card-primary card-outline">
     <div class="card-body">
@@ -35,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $name = "";
                     $user_model = User::findOne(["id" => $model->user]);
                     if (!empty($user_model)) {
-                        $name = $user_model->first_name . " " .$user_model->last_name;
+                        $name = $user_model->first_name . " " . $user_model->last_name;
                     }
                     return $name;
                 }
@@ -82,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'popoverOptions' => [
                                     'toggleButton' => ['class' => 'btn btn-secondary btn-md'],
                                     'placement' => PopoverX::ALIGN_BOTTOM_RIGHT,
-                                    'type'=>'success'
+                                    'type' => 'success'
                                 ]
                     ]);
                 }
@@ -103,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $name = "";
                     $user_model = User::findOne(["id" => $model->user]);
                     if (!empty($user_model)) {
-                        $name = $user_model->first_name . " " . $user_model->other_name . " " . $user_model->last_name . "-" . $user_model->email;
+                        $name = $user_model->first_name . " " . $user_model->last_name . "-" . $user_model->email;
                     }
                     return $name;
                 }
@@ -134,8 +132,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => $gridColumns2,
             'fontAwesome' => true,
             'dropdownOptions' => [
-                'label' => 'Export All',
-                'class' => 'btn btn-default'
+                'label' => 'Export to Excel',
+                'class' => 'btn btn-outline-secondary',
+                'itemsBefore' => [
+                    '<div class="dropdown-header">Export All Data</div>',
+                ],
+            ],
+            'exportConfig' => [
+                ExportMenu::FORMAT_TEXT => false,
+                ExportMenu::FORMAT_HTML => false,
+                ExportMenu::FORMAT_EXCEL => false,
+                ExportMenu::FORMAT_PDF => false,
+                ExportMenu::FORMAT_CSV => false,
             ],
             'filename' => 'audittraillogs' . date("YmdHis")
         ])
@@ -144,14 +152,14 @@ $this->params['breadcrumbs'][] = $this->title;
         GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-           // 'pjax' => true,
+            // 'pjax' => true,
             'columns' => $gridColumns,
             'export' => [
-            'fontAwesome' => true,
+                'fontAwesome' => true,
             ]
         ]);
         ?>
-        
+
 
     </div>
 </div>
