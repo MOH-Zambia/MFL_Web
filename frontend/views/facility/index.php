@@ -337,31 +337,31 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                                 'filename' => 'mfl_facilities_export' . date("YmdHis")
                     ]);
-                    if (!empty($dataProvider) && $dataProvider->getCount() > 0) {
-                        echo GridView::widget([
-                            'dataProvider' => $dataProvider,
-                            'filterModel' => $searchModel,
-                            'columns' => $gridColumns,
-                            'pjax' => true,
-                            'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
-                            'panel' => [
-                                'type' => GridView::TYPE_DEFAULT,
-                            // 'heading' => '<h3 class="panel-title"><i class="fas fa-book"></i> Library</h3>',
-                            ],
-                            // set a label for default menu
-                            'export' => false,
-                            'exportContainer' => [
-                                'class' => 'btn-group mr-2'
-                            ],
-                            // your toolbar can include the additional full export menu
-                            'toolbar' => [
-                                '{export}',
-                                $fullExportMenu,
-                            ]
-                        ]);
-                    }else {
-                        echo "<p class='text-sm'>There are currently no facilities in the system</p>";
-                    }
+                    //   if (!empty($dataProvider) && $dataProvider->getCount() > 0) {
+                    echo GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'filterModel' => $searchModel,
+                        'columns' => $gridColumns,
+                        //'pjax' => true,
+                        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
+                        'panel' => [
+                            'type' => GridView::TYPE_DEFAULT,
+                        // 'heading' => '<h3 class="panel-title"><i class="fas fa-book"></i> Library</h3>',
+                        ],
+                        // set a label for default menu
+                        'export' => false,
+                        'exportContainer' => [
+                            'class' => 'btn-group mr-2'
+                        ],
+                        // your toolbar can include the additional full export menu
+                        'toolbar' => [
+                            '{export}',
+                            $fullExportMenu,
+                        ]
+                    ]);
+                    /*  }else {
+                      echo "<p class='text-sm'>There are currently no facilities in the system</p>";
+                      } */
                     ?>
 
                 </div>

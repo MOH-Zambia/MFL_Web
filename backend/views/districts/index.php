@@ -201,27 +201,68 @@ $this->params['breadcrumbs'][] = $this->title;
           ]);
           } */
         ?>
-        <?=
-        GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'export' => [
-                'showConfirmAlert' => false,
-                'target' => GridView::TARGET_BLANK,
-                'filename' => 'districts' . date("YmdHis")
-            ],
-            //'bordered' => true,
-            //'striped' => true,
-            'toggleDataContainer' => ['class' => 'btn-group mr-2'],
-            'condensed' => true,
-            'responsive' => true,
-            'hover' => true,
-            'columns' => $gridColumns,
-            'panel' => [
-                'type' => 'default',
-            //'heading' => 'Products'
-            ]
-        ]);
+
+
+        <?php
+        if (!empty($dataProvider) && $dataProvider->getCount() > 0) {
+            $fullExportMenu = ExportMenu::widget([
+                        'dataProvider' => $dataProvider,
+                        'columns' => $gridColumns,
+                        'columnSelectorOptions' => [
+                            'label' => 'Cols...',
+                        ],
+                        'batchSize' => 200,
+                        // 'hiddenColumns' => [0, 9],
+                        //'disabledColumns' => [1, 2],
+                        //'target' => ExportMenu::TARGET_BLANK,
+                        'exportConfig' => [
+                            ExportMenu::FORMAT_TEXT => false,
+                            ExportMenu::FORMAT_HTML => false,
+                            ExportMenu::FORMAT_EXCEL => false,
+                            ExportMenu::FORMAT_PDF => false,
+                            ExportMenu::FORMAT_CSV => false,
+                        ],
+                        'pjaxContainerId' => 'kv-pjax-container',
+                        'exportContainer' => [
+                            'class' => 'btn-group mr-2'
+                        ],
+                        'dropdownOptions' => [
+                            'label' => 'Export to Excel',
+                            'class' => 'btn btn-outline-secondary',
+                            'itemsBefore' => [
+                                '<div class="dropdown-header">Export All Data</div>',
+                            ],
+                        ],
+                        'filename' => 'districts_export' . date("YmdHis")
+            ]);
+            //  echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
+            echo GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => $gridColumns,
+                'condensed' => true,
+                'responsive' => true,
+                'hover' => true,
+                // 'pjax' => true,
+                'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
+                'panel' => [
+                    'type' => GridView::TYPE_DEFAULT,
+                // 'heading' => '<h3 class="panel-title"><i class="fas fa-book"></i> Library</h3>',
+                ],
+                // set a label for default menu
+                'export' => false,
+                'exportContainer' => [
+                    'class' => 'btn-group mr-2'
+                ],
+                // your toolbar can include the additional full export menu
+                'toolbar' => [
+                    '{export}',
+                    $fullExportMenu,
+                ]
+            ]);
+        } else {
+            echo "<p class='text-sm'>There are currently no districts in the system</p>";
+        }
         ?>
 
 

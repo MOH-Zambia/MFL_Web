@@ -152,7 +152,7 @@ $this->params['breadcrumbs'][] = $this->title;
         GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            // 'pjax' => true,
+            'pjax' => true,
             'columns' => $gridColumns,
             'export' => [
                 'fontAwesome' => true,

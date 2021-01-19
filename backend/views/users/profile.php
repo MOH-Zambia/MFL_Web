@@ -15,7 +15,7 @@ $session = Yii::$app->session;
 <div class="row">
     <div class="col-md-3">
         <!-- Profile Image -->
-        <div class="card card-success card-outline">
+        <div class="card card-primary card-outline">
             <div class="card-body box-profile">
                 <div class="text-center">
                     <img src="<?= Url::to('@web/img/icon.png') ?>" class="profile-user-img img-fluid img-circle" alt="User Image">
@@ -24,7 +24,6 @@ $session = Yii::$app->session;
                 <h3 class="profile-username text-center"><?= $session['user'] ?></h3>
 
                 <p class="text-muted text-center"><?= $session['role'] ?> </p>
-                <p class="text-muted text-center"><?= $model->type_of_user ?> type</p>
 
                 <span class="name"><strong>Status:</strong> <?php echo $model->status == 1 ? '<i class="fa fa-check success fa-2x" style="color:green;"></i>' : '<i style="color:red;" class="fa fa-times danger fa-2x"></i>'; ?></span>    
 
@@ -35,7 +34,7 @@ $session = Yii::$app->session;
     </div>
     <!-- /.col -->
     <div class="col-md-9">
-        <div class="card card-success card-outline">
+        <div class="card card-primary card-outline">
             <div class="card-header p-2">
                 <ul class="nav nav-pills">
                     <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Details</a></li>
@@ -49,7 +48,7 @@ $session = Yii::$app->session;
                         <h4>Instructions</h4>
                         <ol>
                             <li>Fields marked with * are required</li>
-                            <li>Email is used for login hence you will be required to login with new email</li>
+                            <li>Email is used for login hence you will be required to login with new email if you change it</li>
                         </ol>
                         <hr class="dotted short">
 
@@ -58,48 +57,12 @@ $session = Yii::$app->session;
                             <div class="col-md-6">
                                 <?= $form->field($model, 'first_name')->textInput(['maxlength' => true, 'class' => "form-control", 'placeholder' => 'First name'])->label("First name") ?>
                                 <?= $form->field($model, 'last_name')->textInput(['maxlength' => true, 'class' => "form-control", 'placeholder' => 'Last name'])->label("Last name") ?>
-                                <?= $form->field($model, 'other_name')->textInput(['maxlength' => true, 'class' => "form-control", 'placeholder' => 'Other names']) ?>
-                                <?=
-                                $form->field($model, 'title')->dropDownList(
-                                        [
-                                    'Mr.' => 'Mr',
-                                    'Mrs.' => 'Mrs',
-                                    'Miss.' => 'Miss',
-                                    'Ms.' => 'Ms',
-                                    'Dr.' => 'Dr',
-                                    'Prof.' => 'Prof'
-                                        ], ['prompt' => 'Select title', 'required' => false]
-                                );
-                                ?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'nrc', ['enableAjaxValidation' => true])->textInput(['maxlength' => true, 'placeholder' => 'NRC i.e. 100000/10/1']) ?>
-
-                                <?php
-                                $list = ['Male' => 'Male', 'Female' => 'Female',];
-                                echo "<label class='label' for='sex'>Sex</label>";
-                                echo $form->field($model, 'sex')->radioButtonGroup(
-                                        $list, [
-                                    'maxlength' => true,
-                                    'id' => "sex",
-                                    'class' => 'btn-group-sm',
-                                        //'itemOptions' => ['labelOptions' => ['class' => 'btn btn-primary btn-sm']]
-                                ])->label(false);
-                                ?>
-                                <?=
-                                $form->field($model, 'phone')->widget(PhoneInput::className(), [
-                                    'jsOptions' => [
-                                        'allowExtensions' => true,
-                                        'preferredCountries' => ['ZM'],
-                                    ]
-                                ]);
-                                ?>
-
+                                <?php //echo $form->field($model, 'other_name')->textInput(['maxlength' => true, 'class' => "form-control", 'placeholder' => 'Other names']) ?>
                                 <?= $form->field($model, 'email', ['enableAjaxValidation' => true])->textInput(['maxlength' => true, 'type' => 'email', 'placeholder' => 'email address', 'required' => true])->label("Email") ?>
 
                             </div>
                             <div class="form-group col-lg-12">
-                                <?= Html::submitButton('Update', ['class' => 'btn btn-success btn-xs']) ?>
+                                <?= Html::submitButton('Update profile', ['class' => 'btn btn-primary btn-sm']) ?>
                             </div>
                         </div>
                         <?php ActiveForm::end(); ?>
@@ -145,7 +108,7 @@ $session = Yii::$app->session;
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-12">
-                                    <?= Html::submitButton('Change', ['maxlength' => false, 'style' => 'width:150px;', 'class' => 'btn btn-success btn-sm', 'name' => 'login-button']) ?>
+                                    <?= Html::submitButton('Change', ['maxlength' => false, 'style' => 'width:150px;', 'class' => 'btn btn-primary btn-sm', 'name' => 'login-button']) ?>
                                 </div>
                                 <?php ActiveForm::end(); ?>
                             </div>

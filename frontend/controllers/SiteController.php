@@ -126,7 +126,7 @@ class SiteController extends Controller {
      *
      * @return mixed
      */
-    public function actionLogin() {
+    /*public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -141,25 +141,25 @@ class SiteController extends Controller {
                         'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Logs out the current user.
      *
      * @return mixed
      */
-    public function actionLogout() {
+   /* public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
+    }*/
 
     /**
      * Displays contact page.
      *
      * @return mixed
      */
-    public function actionContact() {
+   /* public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
@@ -174,7 +174,7 @@ class SiteController extends Controller {
                         'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Displays about page.
@@ -190,7 +190,7 @@ class SiteController extends Controller {
      *
      * @return mixed
      */
-    public function actionSignup() {
+    /*public function actionSignup() {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
@@ -200,7 +200,7 @@ class SiteController extends Controller {
         return $this->render('signup', [
                     'model' => $model,
         ]);
-    }
+    }*/
 
     public function actionDistrict() {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

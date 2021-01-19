@@ -375,7 +375,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => $gridColumns,
-                'pjax' => true,
+               // 'pjax' => true,
                 'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
                 'panel' => [
                     'type' => GridView::TYPE_DEFAULT,
