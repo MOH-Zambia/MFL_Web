@@ -266,6 +266,7 @@ $session = Yii::$app->session;
                                                 (Yii::$app->controller->action->id == "index" ||
                                                 Yii::$app->controller->action->id == "view" ||
                                                 Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "profile" ||
                                                 Yii::$app->controller->action->id == "update")) {
                                             echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Users</p>', ['users/index'], ["class" => "nav-link active"]);
                                         } else {
@@ -534,6 +535,136 @@ $session = Yii::$app->session;
                                 </li>
                             <?php } ?>
                             <!-------------------------------GEOGRAPHY ENDS--------------------------->
+                            <!-------------------------------NIDS STARTS--------------------------->
+                            <?php
+                            if (User::userIsAllowedTo("Manage indicator groups") ||
+                                    User::userIsAllowedTo("View indicator groups") ||
+                                    User::userIsAllowedTo("Manage indicators") ||
+                                    User::userIsAllowedTo("View indicators") ||
+                                    User::userIsAllowedTo("Manage data elements") ||
+                                    User::userIsAllowedTo("View data elements") ||
+                                    User::userIsAllowedTo("Manage nids validation rules") ||
+                                    User::userIsAllowedTo("View nids validation rules") ||
+                                    User::userIsAllowedTo("Manage data element groups") ||
+                                    User::userIsAllowedTo("View data element groups") ||
+                                    User::userIsAllowedTo("Manage validation rule operators") ||
+                                    User::userIsAllowedTo("View validation rule operators")
+                            ) {
+                                if (Yii::$app->controller->id == "indicator-group" ||
+                                        Yii::$app->controller->id == "indicators" ||
+                                        Yii::$app->controller->id == "data-element-group" ||
+                                        Yii::$app->controller->id == "data-elements" ||
+                                        Yii::$app->controller->id == "validation-rule-operator" ||
+                                        Yii::$app->controller->id == "validation-rules") {
+                                    echo '<li class="nav-item has-treeview menu-open">'
+                                    . ' <a href="#" class="nav-link active">';
+                                } else {
+                                    echo '<li class="nav-item has-treeview">'
+                                    . '<a href="#" class="nav-link">';
+                                }
+                                ?>
+                                <i class="nav-icon fas fa-indent"></i>
+                                <p>
+                                    NIDS Management
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php
+                                    if (User::userIsAllowedTo("Manage indicator groups") ||
+                                            User::userIsAllowedTo('View indicator groups')) {
+                                        echo '<li class="nav-item">';
+                                        if (Yii::$app->controller->id == "indicator-group" &&
+                                                (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Indicator groups</p>', ['/indicator-group/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Indicator group</p>', ['/indicator-group/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+
+                                    if (User::userIsAllowedTo("Manage indicators") ||
+                                            User::userIsAllowedTo("View indicators")) {
+                                        echo '   <li class="nav-item">';
+                                        if (Yii::$app->controller->id == "indicators" &&
+                                                (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Indicators</p>', ['/indicators/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Indicators</p>', ['/indicators/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+                                    if (User::userIsAllowedTo("Manage data element groups") ||
+                                            User::userIsAllowedTo("View data element groups")) {
+                                        echo '   <li class="nav-item">';
+                                        if (Yii::$app->controller->id == "data-element-group" &&
+                                                (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Data element groups</p>', ['/data-element-group/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Data element groups</p>', ['/data-element-group/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+                                    if (User::userIsAllowedTo("Manage data elements") ||
+                                            User::userIsAllowedTo("View data elements")) {
+                                        echo '   <li class="nav-item">';
+                                        if (Yii::$app->controller->id == "data-elements" &&
+                                                (
+                                                Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Data elements</p>', ['/data-elements/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Data elements</p>', ['/data-elements/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+
+
+                                    if (User::userIsAllowedTo("Manage validation rule operators") ||
+                                            User::userIsAllowedTo("View validation rule operators")) {
+                                        echo '   <li class="nav-item">';
+                                        if (Yii::$app->controller->id == "validation-rule-operator" &&
+                                                (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Validation rule operators</p>', ['validation-rule-operator/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Validation rule operators</p>', ['validation-rule-operator/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+                                    if (User::userIsAllowedTo("Manage nids validation rules") ||
+                                            User::userIsAllowedTo("View nids validation rules")) {
+                                        echo '   <li class="nav-item">';
+                                        if (Yii::$app->controller->id == "validation-rules" &&
+                                                (Yii::$app->controller->action->id == "index" ||
+                                                Yii::$app->controller->action->id == "create" ||
+                                                Yii::$app->controller->action->id == "update" ||
+                                                Yii::$app->controller->action->id == "view")) {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Validation rules</p>', ['validation-rules/index'], ["class" => "nav-link active"]);
+                                        } else {
+                                            echo Html::a('<i class="far fa-circle nav-icon"></i> <p>Validation rules</p>', ['validation-rules/index'], ["class" => "nav-link"]);
+                                        }
+                                        echo '</li>';
+                                    }
+                                    ?>
+
+                                </ul>
+                                </li>
+                            <?php } ?>
+                            <!-------------------------------NIDS ENDS-------------------------------->
                             <!-------------------------------AUDIT TRAIL STARTS----------------------->
                             <li class="nav-item">
                                 <?php

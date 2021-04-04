@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use kartik\detail\DetailView;
 use common\models\RightAllocation;
 use backend\models\User;
 use kartik\grid\GridView;
@@ -13,6 +13,7 @@ $this->title = "Role: " . $model->role;
 $this->params['breadcrumbs'][] = ['label' => 'Roles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->role;
 \yii\web\YiiAsset::register($this);
+$rightsArray = RightAllocation::getRights($model->id);
 ?>
 <div class="card card-primary card-outline">
     <div class="card-body">
@@ -50,44 +51,48 @@ $this->params['breadcrumbs'][] = $model->role;
             'dataProvider' => $dataProvider,
         ]);
         ?>
-        <?=
-        DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'role:ntext',
-                [
-                    'label' => 'Rights',
-                    'value' => function($model) {
-                        $rightsArray = RightAllocation::getRights($model->id);
-                        return implode(", ", $rightsArray);
-                    }
-                ],
-                [
-                    'attribute' => 'created_by',
-                    'value' => function($model) {
-                        return !empty($model->created_by) ? User::findOne(['id' => $model->created_by])->getFullName() : "";
-                    }
-                ],
-                [
-                    'attribute' => 'created_at',
-                    'value' => function($model) {
-                        return date('d-M-Y', $model->created_at);
-                    }
-                ],
-                [
-                    'label' => 'Last Modified By',
-                    'value' => function($model) {
-                        return !empty($model->updated_by) ? User::findOne(['id' => $model->updated_by])->getFullName() : "";
-                    }
-                ],
-                [
-                    'label' => 'Last Modified At',
-                    'value' => function($model) {
-                        return date('d-M-Y', $model->created_at);
-                    }
+        <?php
+        $attributes = [
+            [
+                'columns' => [
+                    [
+                        'label' => 'Rights',
+                        'value' => implode(", ", $rightsArray),
+                      //  'valueColOptions' => ['style' => 'width:95%']
+                    ],
                 ],
             ],
-        ])
+            [
+                'columns' => [
+                    [
+                        'attribute' => 'created_by',
+                        'value' => !empty($model->created_by) ? User::findOne(['id' => $model->created_by])->getFullName() : ""
+                    ],
+                ],
+            ],
+            [
+                'columns' => [
+                   [
+                    'attribute' => 'created_at',
+                    'value' => date('d-M-Y', $model->created_at)
+                ],
+                ],
+            ],
+        ];
+
+
+        echo DetailView::widget([
+            'model' => $model,
+            'condensed' => true,
+            'striped' => true,
+            // 'condensed' => $condensed,
+            'responsive' => true,
+            'hover' => true,
+            'hAlign' => DetailView::ALIGN_LEFT,
+            'vAlign' => DetailView::ALIGN_MIDDLE,
+            'mode' => DetailView::MODE_VIEW,
+            'attributes' => $attributes
+        ]);
         ?>
     </div>
 

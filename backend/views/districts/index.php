@@ -143,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) {
                         return Html::a(
                                         '<span class="fa fa-eye"></span>', ['view', 'id' => $model->id], [
-                                    'title' => 'View province',
+                                    'title' => 'View district',
                                     'data-toggle' => 'tooltip',
                                     'data-placement' => 'top',
                                     'data-pjax' => '0',
@@ -170,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         if (User::userIsAllowedTo('Remove districts')) {
                             return Html::a(
                                             '<span class="fa fa-trash"></span>', ['delete', 'id' => $model->id], [
-                                        'title' => 'Remove province',
+                                        'title' => 'Remove district',
                                         'data-toggle' => 'tooltip',
                                         'data-placement' => 'top',
                                         'data' => [

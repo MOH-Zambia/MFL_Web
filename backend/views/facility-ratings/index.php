@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             //'id',
             [
-                //'enableSorting' => false,
+                'group' => true,
                 'attribute' => 'facility_id',
                 'format' => 'raw',
                 'filterType' => \kartik\grid\GridView::FILTER_SELECT2,

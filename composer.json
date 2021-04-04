@@ -24,9 +24,9 @@
         "kartik-v/yii2-checkbox-x": "dev-master",
         "ext-json": "*",
         "yiisoft/yii2-authclient": "2.1.8",
+        "kartik-v/yii2-mpdf": "v1.0.6",
         "kartik-v/yii2-number": "dev-master",
         "kartik-v/yii2-widget-touchspin": "dev-master",
-        "kartik-v/yii2-mpdf": "v1.0.6",
         "kartik-v/yii2-export": "dev-master",
         "kartik-v/yii2-widgets": "v3.4.1",
         "kartik-v/yii2-editors": "dev-master",
@@ -49,8 +49,8 @@
         "2amigos/yii2-highcharts-widget": "~1.0",
         "kartik-v/yii2-widget-rating": "*",
         "demogorgorn/yii2-ajax-submit-button": "*",
-        "2amigos/yii2-leaflet-extension" : "*",
-        "davidjeddy/yii2-leaflet-draw-plugin" : "*"
+        "2amigos/yii2-leaflet-extension": "*",
+        "davidjeddy/yii2-leaflet-draw-plugin": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

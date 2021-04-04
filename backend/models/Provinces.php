@@ -2,10 +2,7 @@
 
 namespace backend\models;
 
-use Yii;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use nanson\postgis\behaviors\GeometryBehavior;
 use dosamigos\google\maps\LatLng;
 /**
  * This is the model class for table "geography_province".

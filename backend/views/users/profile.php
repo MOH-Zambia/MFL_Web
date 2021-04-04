@@ -25,7 +25,7 @@ $session = Yii::$app->session;
 
                 <p class="text-muted text-center"><?= $session['role'] ?> </p>
 
-                <span class="name"><strong>Status:</strong> <?php echo $model->status == 1 ? '<i class="fa fa-check success fa-2x" style="color:green;"></i>' : '<i style="color:red;" class="fa fa-times danger fa-2x"></i>'; ?></span>    
+                <span class="name"><strong>Status:</strong> <?php echo $model->status == 1 ? '<span class="badge badge-success"><i class="fa fa-check success"></i> Active</span>' : '<span class="badge badge-danger"><i class="fa fa-times danger"></i> Inactive</span>'; ?></span>    
 
 
             </div>

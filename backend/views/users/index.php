@@ -138,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true],
                     ],
-                    'filter' => [User::STATUS_ACTIVE => 'Active', User::STATUS_INACTIVE => 'Blocked'],
+                    'filter' => [User::STATUS_ACTIVE => 'Active', User::STATUS_INACTIVE => 'Inactive'],
                     'filterInputOptions' => ['prompt' => 'Filter by Status', 'class' => 'form-control', 'id' => null],
                     'class' => EditableColumn::className(),
                     'enableSorting' => true,
@@ -147,17 +147,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         'asPopover' => false,
                         'options' => ['class' => 'form-control', 'prompt' => 'Select Status...'],
                         'inputType' => Editable::INPUT_DROPDOWN_LIST,
-                        'data' => [\backend\models\User::STATUS_ACTIVE => 'Active', User::STATUS_INACTIVE => 'Blocked'],
+                        'data' => [\backend\models\User::STATUS_ACTIVE => 'Active', User::STATUS_INACTIVE => 'Inactive'],
                     ],
                     'value' => function($model) {
                         $str = "";
                         if ($model->status == \backend\models\User::STATUS_ACTIVE) {
-                            $str = "<p style='margin:2px;padding:2px;display:inline-block;' class='alert alert-success'> "
+                            $str = "<p class='badge badge-success'> "
                                     . "<i class='fa fa-check'></i> Active</p><br>";
                         }
                         if ($model->status == \backend\models\User::STATUS_INACTIVE) {
-                            $str = "<p style='margin:2px;padding:2px;display:inline-block;' class='alert alert-danger'> "
-                                    . "<i class='fa fa-times'></i> Blocked</p><br>";
+                            $str = "<p class='badge badge-danger'> "
+                                    . "<i class='fa fa-times'></i> Inactive</p><br>";
                         }
                         return $str;
                     },
@@ -260,6 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <ol>
                             <li>Fields marked with <span style="color: red;">*</span> are required</li>
                             <li>Email is used for login</li>
+                            <li>A account activation email will be sent to users email</li>
                         </ol>
                     </div>
                 </div>

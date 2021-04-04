@@ -7,7 +7,6 @@ use kartik\form\ActiveForm;
 use yii\grid\ActionColumn;
 use backend\models\User;
 use kartik\number\NumberControl;
-use kartik\dialog\Dialog;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ProvincesSearch */
