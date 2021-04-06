@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use backend\assets\AppAsset;
 use yii\helpers\Url;
 use yii\bootstrap4\Breadcrumbs;
+
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -17,22 +18,22 @@ AppAsset::register($this);
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" sizes="96x96" href="<?= Url::to('@web/img/coa.png') ?>">
         <?php $this->registerCsrfMetaTags() ?>
-        <title>MFL | <?= Html::encode($this->title) ?></title>
-          <!-- Leaflet kernel -->
-        <!--<link  href="<?= Url::to('@web/leaflet/leaflet.css') ?>" rel="stylesheet" />
-        <script src="<?= Url::to('@web/leaflet/leaflet-src.js') ?>"></script>
+        <title>NIDS | <?= Html::encode($this->title) ?></title>
+        <!-- Leaflet kernel -->
+      <!--<link  href="<?= Url::to('@web/leaflet/leaflet.css') ?>" rel="stylesheet" />
+      <script src="<?= Url::to('@web/leaflet/leaflet-src.js') ?>"></script>
+
+  
+      <link  href="<?= Url::to('@web/leaflet/leaflet.draw.css') ?>" rel="stylesheet" />
+      <script src="<?= Url::to('@web/leaflet/leaflet.draw-src.js') ?>"></script>
+      <script src="<?= Url::to('@web/leaflet/leaflet.geometryutil.js') ?>"></script>
+      <script src="<?= Url::to('@web/leaflet/leaflet.snap.js') ?>"></script>
 
     
-        <link  href="<?= Url::to('@web/leaflet/leaflet.draw.css') ?>" rel="stylesheet" />
-        <script src="<?= Url::to('@web/leaflet/leaflet.draw-src.js') ?>"></script>
-        <script src="<?= Url::to('@web/leaflet/leaflet.geometryutil.js') ?>"></script>
-        <script src="<?= Url::to('@web/leaflet/leaflet.snap.js') ?>"></script>
+      <script src="<?= Url::to('@web/leaflet/togeojson.js') ?>"></script>
+      <script src="<?= Url::to('@web/leaflet/leaflet.filelayer.js') ?>"></script>
 
-      
-        <script src="<?= Url::to('@web/leaflet/togeojson.js') ?>"></script>
-        <script src="<?= Url::to('@web/leaflet/leaflet.filelayer.js') ?>"></script>
-
-        <script src="<?= Url::to('@web/leaflet/Control.Draw.Plus.js') ?>"></script>-->
+      <script src="<?= Url::to('@web/leaflet/Control.Draw.Plus.js') ?>"></script>-->
         <?php $this->head() ?>
 
     </head>
@@ -49,7 +50,7 @@ AppAsset::register($this);
                         Html::img('@web/img/coa.png', ["class" => "brand-image",
                             'style' => 'opacity: .9']);
                         ?>
-                        <span class="brand-text text-white text-md font-weight-light">Master Facility List</span>
+                        <span class="brand-text text-white text-md font-weight-light">NIDS</span>
                     </a>
                     <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -58,24 +59,34 @@ AppAsset::register($this);
                         <!-- Left navbar links -->
                         <ul class="navbar-nav">
                             <li class="nav-item ">
-                                <?= Html::a('<span class="fas fa-home"></span> Home', ['/site/index'], ["class" => "nav-link text-white text-sm"])
+                                <?= Html::a('Home', ['#'], ["class" => "nav-link text-white text-sm"])
                                 ?>
                             </li>
                             <li class="nav-item">
-                                <?= Html::a('<span class="fas fa-info"></span> About', ['/site/about'], ["class" => "nav-link text-white text-sm"])
-                                ?>
-                            </li>
-
-                            <li class="nav-item">
-                                <?= Html::a('<span class="fas fa-search"></span> Advanced search', ['/facility/search'], ["class" => "nav-link text-white text-sm"])
-                                ?>
-                            </li>
-                            <li class="nav-item">
-                                <?= Html::a('<span class="fas fa-list"></span> Facility list', ['/facility/index'], ["class" => "nav-link text-white text-sm"])
+                                <?php
+                                if (Yii::$app->controller->id == "indicators") {
+                                    echo Html::a('<span class="fas fa-arrow-circle-right"></span> Indicators', ['/indicators/index'], ["class" => "nav-link active text-white text-sm"]);
+                                } else {
+                                    echo Html::a('Indicators', ['/indicators/index'], ["class" => "nav-link text-white text-sm"]);
+                                }
                                 ?>
                             </li>
                             <li class="nav-item">
-                                <?= Html::a('<span class="fas fa-indent"></span> National Indicator Dataset', ['/indicators/index'], ["class" => "nav-link text-white text-sm"])
+                                <?php
+                                if (Yii::$app->controller->id == "data-elements") {
+                                    echo Html::a('<span class="fas fa-arrow-circle-right"></span> Data elements', ['/data-elements/index'], ["class" => "nav-link text-white text-sm"]);
+                                } else {
+                                    echo Html::a('Data elements', ['/data-elements/index'], ["class" => "nav-link text-white text-sm"]);
+                                }
+                                ?>
+                            </li>
+                            <li class="nav-item">
+                                <?php
+                                if (Yii::$app->controller->id == "validation-rules") {
+                                    echo Html::a('<span class="fas fa-arrow-circle-right"></span> Validation rules', ['/validation-rules/index'], ["class" => "nav-link text-white text-sm"]);
+                                } else {
+                                    echo Html::a('Validation rules', ['/validation-rules/index'], ["class" => "nav-link text-white text-sm"]);
+                                }
                                 ?>
                             </li>
                         </ul>
@@ -96,23 +107,18 @@ AppAsset::register($this);
                     <!-- Right navbar links -->
                     <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                         <!-- Messages Dropdown Menu -->
-                        <li class="nav-item">
-                            <a class="text-white text-sm nav-link" href="#">
-                                <span class="fas fa-question"></span> FAQs
-                            </a>
-                        </li>
                         <li class="nav-item ">
-                            <a class="nav-link text-white text-sm" href="#">
-                                <span class="fas fa-envelope"></span> Feedback
-                            </a>
+                            <?= Html::a('<span class="fas fa-list"></span> Master Facility List', ['/site/index'], ["class" => "nav-link text-white text-sm"])
+                            ?>
                         </li>
+
                     </ul>
                 </div>
             </nav>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" >
                 <!-- Content Header (Page header) -->
-                 <div class="content-header">
+                <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
@@ -123,7 +129,7 @@ AppAsset::register($this);
                                     <?=
                                     Breadcrumbs::widget([
                                         'homeLink' => ['label' => 'Home',
-                                            'url' => Yii::$app->getHomeUrl() . 'site/index'],
+                                            'url' => Yii::$app->getHomeUrl() . 'indicators/index'],
                                         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                                     ])
                                     ?>
@@ -187,7 +193,7 @@ AppAsset::register($this);
                         <hr class="dotted short">
                     </div>
                     <div class="col-lg-12 text-center text-sm">
-                        Copyright &copy; <?= date("Y") ?> - Master Facility List-
+                        Copyright &copy; <?= date("Y") ?> - National Indicator Dataset(NIDS) -
                         <a class="text-white" href="https://www.moh.gov.zm/" target="blank">MoH</a>. All rights reserved.
                     </div>
                 </div>

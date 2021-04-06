@@ -13,6 +13,8 @@ use yii\helpers\Json;
 use backend\models\AuditTrail;
 use backend\models\User;
 use yii\db\Expression;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * FacilityController implements the CRUD actions for MFLFacility model.
@@ -125,6 +127,50 @@ class FacilityController extends Controller {
                 $model->timestamp = new Expression('NOW()');
                 $model->updated = new Expression('NOW()');
                 if ($model->save()) {
+                    if (!empty(Yii::$app->params['amqQueues'])) {
+                        //We publish the creation of the facility
+                        $msg = [
+                            'action' => "CREATE",
+                            'facilityId' => $model->id,
+                            'DHIS2UId' => $model->DHIS2_UID,
+                            'HMISCode' => $model->HMIS_code,
+                            'smartcareGUId' => $model->smartcare_GUID,
+                            'eLMISId' => $model->eLMIS_ID,
+                            'iHRISId' => $model->iHRIS_ID,
+                            'name' => $model->name,
+                            'numberOfBeds' => $model->number_of_beds,
+                            'numberOfCots' => $model->number_of_cots,
+                            'numberOfNurses' => $model->number_of_nurses,
+                            'numberOfDoctors' => $model->number_of_doctors,
+                            'addressLine1' => $model->address_line1,
+                            'addressLine2' => $model->address_line2,
+                            'postalAddress' => $model->postal_address,
+                            'webAddress' => $model->web_address,
+                            'email' => $model->email,
+                            'phone' => $model->phone,
+                            'mobile' => $model->mobile,
+                            'fax' => $model->fax,
+                            'catchmentPopulationHeadCount' => $model->catchment_population_head_count,
+                            'catchmentPopulationCso' => $model->catchment_population_cso,
+                            'longitude' => $model->longitude,
+                            'latitude' => $model->latitude,
+                            'administrativeUnit' => !empty($model->administrative_unit_id) ? \backend\models\MFLAdministrativeunit::findOne($model->administrative_unit_id)->name : "",
+                            'facilityType' => !empty($model->facility_type_id) ? \backend\models\Facilitytype::findOne($model->facility_type_id)->name : "",
+                            'locationType' => !empty($model->location_type_id) ? \backend\models\LocationType::findOne($model->location_type_id)->name : "",
+                            'operationStatus' => !empty($model->operation_status_id) ? \backend\models\Operationstatus::findOne($model->operation_status_id)->name : "",
+                            'ownership' => !empty($model->ownership_id) ? \backend\models\FacilityOwnership::findOne($model->ownership_id)->name : "",
+                            'province' => !empty($model->province_id) ? \backend\models\Provinces::findOne($model->province_id)->name : "",
+                            'district' => !empty($model->district_id) ? \backend\models\Districts::findOne($model->district_id)->name : "",
+                            'constituency' => !empty($model->constituency_id) ? \backend\models\Constituency::findOne($model->constituency_id)->name : "",
+                            'ward' => !empty($model->ward_id) ? \backend\models\Wards::findOne($model->ward_id)->name : "",
+                        ];
+
+                        foreach (Yii::$app->params['amqQueues'] as $queue) {
+                            self::publishAMQMsg($msg, $queue);
+                        }
+                    }
+
+                    //We log action taken
                     $audit = new AuditTrail();
                     $audit->user = Yii::$app->user->id;
                     $audit->action = "Added Facility " . $model->name;
@@ -183,6 +229,50 @@ class FacilityController extends Controller {
                 }
                 $model->updated = new Expression('NOW()');
                 if ($model->save()) {
+                    if (!empty(Yii::$app->params['amqQueues'])) {
+                        //We publish the update to rabbitMQ
+                        $msg = [
+                            'action' => "CREATE",
+                            'facilityId' => $model->id,
+                            'DHIS2UId' => $model->DHIS2_UID,
+                            'HMISCode' => $model->HMIS_code,
+                            'smartcareGUId' => $model->smartcare_GUID,
+                            'eLMISId' => $model->eLMIS_ID,
+                            'iHRISId' => $model->iHRIS_ID,
+                            'name' => $model->name,
+                            'numberOfBeds' => $model->number_of_beds,
+                            'numberOfCots' => $model->number_of_cots,
+                            'numberOfNurses' => $model->number_of_nurses,
+                            'numberOfDoctors' => $model->number_of_doctors,
+                            'addressLine1' => $model->address_line1,
+                            'addressLine2' => $model->address_line2,
+                            'postalAddress' => $model->postal_address,
+                            'webAddress' => $model->web_address,
+                            'email' => $model->email,
+                            'phone' => $model->phone,
+                            'mobile' => $model->mobile,
+                            'fax' => $model->fax,
+                            'catchmentPopulationHeadCount' => $model->catchment_population_head_count,
+                            'catchmentPopulationCso' => $model->catchment_population_cso,
+                            'longitude' => $model->longitude,
+                            'latitude' => $model->latitude,
+                            'administrativeUnit' => !empty($model->administrative_unit_id) ? \backend\models\MFLAdministrativeunit::findOne($model->administrative_unit_id)->name : "",
+                            'facilityType' => !empty($model->facility_type_id) ? \backend\models\Facilitytype::findOne($model->facility_type_id)->name : "",
+                            'locationType' => !empty($model->location_type_id) ? \backend\models\LocationType::findOne($model->location_type_id)->name : "",
+                            'operationStatus' => !empty($model->operation_status_id) ? \backend\models\Operationstatus::findOne($model->operation_status_id)->name : "",
+                            'ownership' => !empty($model->ownership_id) ? \backend\models\FacilityOwnership::findOne($model->ownership_id)->name : "",
+                            'province' => !empty($model->province_id) ? \backend\models\Provinces::findOne($model->province_id)->name : "",
+                            'district' => !empty($model->district_id) ? \backend\models\Districts::findOne($model->district_id)->name : "",
+                            'constituency' => !empty($model->constituency_id) ? \backend\models\Constituency::findOne($model->constituency_id)->name : "",
+                            'ward' => !empty($model->ward_id) ? \backend\models\Wards::findOne($model->ward_id)->name : "",
+                        ];
+
+                        foreach (Yii::$app->params['amqQueues'] as $queue) {
+                            self::publishAMQMsg($msg, $queue);
+                        }
+                    }
+
+                    //We log action taken
                     $audit = new AuditTrail();
                     $audit->user = Yii::$app->user->id;
                     $audit->action = "Updated Facility: " . $model->name . "' details";
@@ -207,6 +297,19 @@ class FacilityController extends Controller {
             Yii::$app->session->setFlash('error', 'You are not authorised to perform that action.');
             return $this->redirect(['home/home']);
         }
+    }
+
+    public static function publishAMQMsg($message, $queue) {
+        $connection = new AMQPStreamConnection(Yii::$app->params['amqHost'], Yii::$app->params['amqPort'], Yii::$app->params['amqUsername'], Yii::$app->params['amqPassword']);
+        $channel = $connection->channel();
+
+        $channel->queue_declare($queue, false, TRUE, false, false);
+        //We send json encoded messages
+        $msg = new AMQPMessage(\GuzzleHttp\json_encode($message));
+        $channel->basic_publish($msg, '', $queue);
+        //We close the channel and connection 
+        $channel->close();
+        $connection->close();
     }
 
     public function actionServices() {
@@ -354,7 +457,25 @@ class FacilityController extends Controller {
             $model = $this->findModel($id);
             $name = $model->name;
             try {
+                //We delete other attachments to the facility before deleting facility
+                \backend\models\MFLFacilityEquipment::deleteAll(['facility_id' => $id]);
+                \backend\models\MFLFacilityInfrastructure::deleteAll(['facility_id' => $id]);
+                \backend\models\MFLFacilityLabLevel::deleteAll(['facility_id' => $id]);
+                \backend\models\MFLFacilityOperatingHours::deleteAll(['facility_id' => $id]);
+                \backend\models\MFLFacilityServices::deleteAll(['facility_id' => $id]);
+                \backend\models\MFLFacilityRatings::deleteAll(['facility_id' => $id]);
                 if ($model->delete()) {
+                    if (!empty(Yii::$app->params['amqQueues'])) {
+                        //We publish the deletion to rabbitMQ
+                        $msg = [
+                            'action' => "DELETE",
+                            'facilityID' => $id
+                        ];
+                        foreach (Yii::$app->params['amqQueues'] as $queue) {
+                            self::publishAMQMsg($msg, $queue);
+                        }
+                    }
+
                     $audit = new AuditTrail();
                     $audit->user = Yii::$app->user->id;
                     $audit->action = "Removed Facility $name from the system.";

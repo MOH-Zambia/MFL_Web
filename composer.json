@@ -50,7 +50,8 @@
         "kartik-v/yii2-widget-rating": "*",
         "demogorgorn/yii2-ajax-submit-button": "*",
         "2amigos/yii2-leaflet-extension": "*",
-        "davidjeddy/yii2-leaflet-draw-plugin": "*"
+        "davidjeddy/yii2-leaflet-draw-plugin": "*",
+        "php-amqplib/php-amqplib": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

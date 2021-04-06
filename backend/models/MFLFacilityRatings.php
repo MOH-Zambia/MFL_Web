@@ -36,7 +36,7 @@ class MFLFacilityRatings extends \yii\db\ActiveRecord {
             [['rate_type_id', 'date_created', 'facility_id', 'rate_value'], 'integer'],
             [['rating', 'comment'], 'string'],
             ['email', 'email', 'message' => "The email isn't correct!"],
-            [['id'], 'unique'],
+            //[['id'], 'unique'],
             [['rate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => MFLFacilityRateTypes::className(), 'targetAttribute' => ['rate_type_id' => 'id']],
         ];
     }
