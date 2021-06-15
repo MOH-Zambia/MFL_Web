@@ -84,8 +84,8 @@ class MFLFacility extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['name', 'timestamp', 'updated', 'district_id', 'facility_type_id', 'operation_status_id', 'ownership_id'], 'required'],
-            [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'default', 'value' => null],
-            [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
+            [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'number_of_paramedics', 'number_of_midwives', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'default', 'value' => null],
+            [['number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'number_of_paramedics', 'number_of_midwives', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
             [['star', 'rated', 'rating', 'comment',], 'string'],
             [['longitude', 'latitude'], 'number'],
             [['timestamp', 'updated', 'province_id', 'geom'], 'safe'],
@@ -125,6 +125,8 @@ class MFLFacility extends \yii\db\ActiveRecord {
             'number_of_cots' => 'Number Of Cots',
             'number_of_nurses' => 'Number Of Nurses',
             'number_of_doctors' => 'Number Of Doctors',
+            'number_of_paramedics' => "Number of Paramedics",
+            'number_of_midwives' => "Number of midwives",
             'address_line1' => 'Address 1',
             'address_line2' => 'Address 2',
             'postal_address' => 'Postal address',

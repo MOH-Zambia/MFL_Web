@@ -7,6 +7,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Indicators */
 /* @var $form yii\widgets\ActiveForm */
+$list=['Daily'=>'Daily','Weekly'=>'Weekly','Monthly' => 'Monthly', 'Quarterly' => 'Quarterly','Biannually'=>'Biannually', 'Annually' => 'Annually'];
 ?>
 
 
@@ -57,13 +58,13 @@ use yii\helpers\Url;
         <?=
                 $form->field($model, 'annualized')
                 ->dropDownList(
-                        ['true' => 'True', 'false' => 'False'], ['custom' => true, 'prompt' => 'Annualized?', 'required' => true]
+                        $list, ['custom' => true, 'prompt' => 'Annualized?', 'required' => true]
         );
         ?>
         <?=
                 $form->field($model, 'frequency')
                 ->dropDownList(
-                        ['Monthly' => 'Monthly', 'Quarterly' => 'Quarterly', 'Annually' => 'Annually'], ['custom' => true, 'prompt' => 'Select frequency', 'required' => true]
+                        $list, ['custom' => true, 'prompt' => 'Select frequency', 'required' => true]
         );
         ?>
 

@@ -55,8 +55,8 @@ $facility_operating_hours = new ActiveDataProvider([
 ?>
 
 <div class="container-fluid">
-<!--DIV not to be removed-->    
-<div id="output"></div>
+    <!--DIV not to be removed-->    
+    <div id="output"></div>
     <div class="row" style="margin-right:-50px;margin-left:-50px;">
         <div class="col-lg-12">
             <div class="card card-primary card-outline">
@@ -104,10 +104,10 @@ $facility_operating_hours = new ActiveDataProvider([
                                                 'model' => $model,
                                                 'attributes' => [
                                                     'name',
-                                                   // 'HMIS_code',
-                                                   // 'smartcare_GUID',
-                                                   // 'eLMIS_ID',
-                                                  //  'iHRIS_ID',
+                                                    // 'HMIS_code',
+                                                    // 'smartcare_GUID',
+                                                    // 'eLMIS_ID',
+                                                    //  'iHRIS_ID',
                                                     'catchment_population_head_count',
                                                     'catchment_population_cso',
                                                     [
@@ -144,6 +144,8 @@ $facility_operating_hours = new ActiveDataProvider([
                                                     'number_of_cots',
                                                     'number_of_nurses',
                                                     'number_of_doctors',
+                                                    'number_of_paramedics',
+                                                    'number_of_midwives'
                                                 ],
                                             ])
                                             ?>
@@ -510,7 +512,7 @@ $facility_operating_hours = new ActiveDataProvider([
                                                 </div>
                                                 <!-- /.card-header -->
                                                 <div class="card-body">
-                                                    
+
                                                     <table style="margin-top: 0px;">
                                                         <tr><td class="text-sm">Average rating: <?= $facility_ratetype_rating ?></td><td>
                                                                 <?php

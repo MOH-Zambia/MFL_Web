@@ -32,7 +32,7 @@ AppAsset::register($this);
                     <a class="navbar-brand" href="" target="blank">
                         <?=
                         Html::img('@web/img/coa.png', ["class" => "brand-image",
-                            'style' => 'opacity: .9']);
+                            'style' => 'opacity: .9;width:70px;height:70px;']);
                         ?>
                         <span class="brand-text text-white font-weight-light">MOH Master Facility List Administration</span>
                     </a>
@@ -88,10 +88,13 @@ AppAsset::register($this);
                             </div>
                             <div class="col-4">
                                 <h2 class="lead"><b>Important links</b></h2>
-                                <ul class="ml-4 mb-0 fa-ul text-white">
+                                 <ul class="ml-6 mb-0 fa-ul text-white">
                                     <li class="small"><a class="text-white" href="https://www.moh.gov.zm/" target="blank">Ministry of Health</a></li>
                                     <li class="small"><a class="text-white" href="https://www.zicta.zm" target="blank">ZICTA</a></li>
                                     <li class="small"><a class="text-white" href="https://www.szi.gov.zm/" target="blank">Smart Zambia</a></li>
+                                    <li class="small"><a class="text-white" href="https://znphi.co.zm/" target="blank">Zambia National Public Health Institute</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.who.int/healthinfo/indicators/2015/metadata/en/" target="blank">100 Core Health Indicators</a></li>
+                                    <li class="small"><a class="text-white" href="https://www.zamstats.gov.zm/" target="blank">Zambia Statistics Agency (ZamStats)</a></li>
                                 </ul>
                             </div>
                             <div class="col-4">

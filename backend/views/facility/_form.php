@@ -122,11 +122,14 @@ if (!empty($model->latitude) && !empty($model->longitude)) {
                             <?= $form->field($model, 'number_of_cots')->textInput(['placeholder' => 'Enter facility number of cots']) ?>
                             <?= $form->field($model, 'number_of_nurses')->textInput(['placeholder' => 'Enter facility number of nurses']) ?>
                             <?= $form->field($model, 'number_of_doctors')->textInput(['placeholder' => 'Enter facility number of doctors']) ?>
+                            <?= $form->field($model, 'number_of_paramedics')->textInput(['placeholder' => 'Pharmacy, Imaging, and laboratory personnel']) ?>
+                            <?= $form->field($model, 'number_of_midwives')->textInput(['placeholder' => 'Enter facility number of midwives']) ?>
                             <?= $form->field($model, 'postal_address')->textInput(['maxlength' => true, 'placeholder' => 'Enter facility postal address']) ?>
                             <?= $form->field($model, 'web_address')->textInput(['maxlength' => true]) ?>
-                            <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+                            
                         </div>
                         <div class="col-lg-6">
+                            <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
                             <?=
                             $form->field($model, 'address_line1')->textarea(['rows' => 4, 'placeholder' =>
                                 'Enter physical address 1']);

@@ -17,7 +17,7 @@ class MFLFacilitySearch extends MFLFacility
     public function rules()
     {
         return [
-            [['id', 'number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
+            [['id', 'number_of_beds', 'number_of_cots', 'number_of_nurses', 'number_of_doctors','number_of_paramedics','number_of_midwives', 'catchment_population_head_count', 'catchment_population_cso', 'administrative_unit_id', 'constituency_id', 'district_id', 'facility_type_id', 'location_type_id', 'operation_status_id', 'ownership_id', 'ward_id'], 'integer'],
             [['DHIS2_UID', 'HMIS_code', 'smartcare_GUID', 'eLMIS_ID', 'iHRIS_ID', 'name', 'address_line1', 'address_line2', 'postal_address', 'web_address', 'email', 'phone', 'mobile', 'fax', 'star', 'rated', 'rating', 'comment', 'geom', 'timestamp', 'updated', 'slug','province_id'], 'safe'],
             [['longitude', 'latitude'], 'number'],
         ];
@@ -64,6 +64,8 @@ class MFLFacilitySearch extends MFLFacility
             'number_of_cots' => $this->number_of_cots,
             'number_of_nurses' => $this->number_of_nurses,
             'number_of_doctors' => $this->number_of_doctors,
+            'number_of_paramedics'=> $this->number_of_paramedics,
+            'number_of_midwives'=> $this->number_of_midwives,
             'catchment_population_head_count' => $this->catchment_population_head_count,
             'catchment_population_cso' => $this->catchment_population_cso,
             'longitude' => $this->longitude,
@@ -100,7 +102,6 @@ class MFLFacilitySearch extends MFLFacility
             ->andFilterWhere(['ilike', 'comment', $this->comment])
             ->andFilterWhere(['ilike', 'geom', $this->geom])
             ->andFilterWhere(['ilike', 'slug', $this->slug]);
-
         return $dataProvider;
     }
 }

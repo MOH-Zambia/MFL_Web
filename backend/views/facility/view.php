@@ -231,6 +231,8 @@ $rate_type_model = \backend\models\MFLFacilityRateTypes::find()
                                         'number_of_cots',
                                         'number_of_nurses',
                                         'number_of_doctors',
+                                        'number_of_paramedics',
+                                        'number_of_midwives'
                                     //  'star:ntext',
                                     //  'rated:ntext',
                                     //  'rating:ntext',

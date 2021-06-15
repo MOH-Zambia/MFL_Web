@@ -97,7 +97,7 @@ $session = Yii::$app->session;
                 <a style="background: #158239" class="brand-link" href="https://www.moh.gov.zm/" target="blank">
                     <?=
                     Html::img('@web/img/coa.png', ["class" => "brand-image",
-                        'style' => 'opacity: .9']);
+                        'style' => 'opacity: .9;width:40px;height:40px;']);
                     ?>
                     <span class="brand-text text-white font-weight-light">MFL</span>
                 </a>

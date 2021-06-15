@@ -119,9 +119,14 @@ class Districts extends \yii\db\ActiveRecord {
         return ArrayHelper::map($names, 'name', 'name');
     }
 
-    public static function getList() {
-        $list = self::find()->orderBy(['name' => SORT_ASC])->all();
-        return ArrayHelper::map($list, 'id', 'name');
+    public static function getList($provinceId = "") {
+        if (empty($provinceId)) {
+            $list = self::find()->orderBy(['name' => SORT_ASC])->all();
+            return ArrayHelper::map($list, 'id', 'name');
+        } else {
+            $list = self::find()->where(["province_id" => $provinceId])->orderBy(['name' => SORT_ASC])->all();
+            return ArrayHelper::map($list, 'id', 'name');
+        }
     }
 
     public static function getListByProvinceID($id) {

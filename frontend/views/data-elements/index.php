@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'view' => function ($url, $model) {
                                     return Html::a(
                                                     '<span class="fa fa-eye"></span>', ['view', 'id' => $model->id], [
-                                                'title' => 'View rule',
+                                                'title' => 'View',
                                                 'data-toggle' => 'tooltip',
                                                 'data-placement' => 'top',
                                                 'data-pjax' => '0',

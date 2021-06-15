@@ -11,6 +11,11 @@ use kartik\export\ExportMenu;
 
 $this->title = 'Facility list';
 $this->params['breadcrumbs'][] = $this->title;
+$provinceId="";
+
+if(!empty($_GET['MFLFacilitySearch']['province_id'])){
+    $provinceId= $_GET['MFLFacilitySearch']['province_id'];
+}
 ?>
 <div class="container-fluid">
     <div class="row"  style="margin-right:-50px;margin-left:-50px;">
@@ -53,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'filterWidgetOptions' => [
                                 'pluginOptions' => ['allowClear' => true],
                             ],
-                            'filter' => \backend\models\Districts::getList(),
+                            'filter' => \backend\models\Districts::getList($provinceId),
                             'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
                             'value' => function ($model) {
                                 $name = backend\models\Districts::findOne($model->district_id)->name;
