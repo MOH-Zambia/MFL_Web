@@ -99,9 +99,15 @@ class Constituency extends \yii\db\ActiveRecord {
         return ArrayHelper::map($names, 'name', 'name');
     }
 
-    public static function getList() {
-        $list = self::find()->orderBy(['name' => SORT_ASC])->all();
-        return ArrayHelper::map($list, 'id', 'name');
+    public static function getList($districtId = "")
+    {
+        if (empty($districtId)) {
+            $list = self::find()->orderBy(['name' => SORT_ASC])->all();
+            return ArrayHelper::map($list, 'id', 'name');
+        } else {
+            $list = self::find()->where(["district_id" => $districtId])->orderBy(['name' => SORT_ASC])->all();
+            return ArrayHelper::map($list, 'id', 'name');
+        }
     }
 
     public static function getById($id) {

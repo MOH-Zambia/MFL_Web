@@ -4,6 +4,7 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\grid\ActionColumn;
 use kartik\export\ExportMenu;
+
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\MFLFacilitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -42,25 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'enableSorting' => true,
                             'attribute' => 'name',
-                             'filter'=>false,
-                           /* 'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
-                            'filterWidgetOptions' => [
-                                'pluginOptions' => ['allowClear' => true],
-                            ],
-                            'filter' => \backend\models\MFLFacility::getNames(),
-                            'filterInputOptions' => ['prompt' => 'Filter by name', 'class' => 'form-control',],*/
+                            'filter' => false,
                             'format' => 'raw',
                         ],
                         [
                             'attribute' => 'province_id',
-                             'filter'=>false,
-                            /*'filterType' => GridView::FILTER_SELECT2,
-                            'filterWidgetOptions' => [
-                                'pluginOptions' => ['allowClear' => true],
-                            ],
-                            'filter' => true,
-                            'filter' => \backend\models\Provinces::getProvinceList(),
-                            'filterInputOptions' => ['prompt' => 'Filter by Province', 'class' => 'form-control', 'id' => null],*/
+                            'filter' => false,
                             'value' => function ($model) {
                                 $province_id = backend\models\Districts::findOne($model->district_id)->province_id;
                                 $name = backend\models\Provinces::findOne($province_id)->name;
@@ -69,16 +57,25 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute' => 'district_id',
-                            'filter'=>false,
-                          /*  'filterType' => GridView::FILTER_SELECT2,
-                            'filterWidgetOptions' => [
-                                'pluginOptions' => ['allowClear' => true],
-                            ],
-                            'filter' => \backend\models\Districts::getList(),
-                            'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
-                          '*/
-                                'value' => function ($model) {
+                            'filter' => false,
+                            'value' => function ($model) {
                                 $name = backend\models\Districts::findOne($model->district_id)->name;
+                                return $name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'constituency_id',
+                            'filter' => false,
+                            'value' => function ($model) {
+                                $name = !empty($model->constituency_id) ? backend\models\Constituency::findOne($model->constituency_id)->name : "";
+                                return $name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'ward_id',
+                            'filter' => false,
+                            'value' => function ($model) {
+                                $name = !empty($model->ward_id) ? backend\models\Wards::findOne($model->ward_id)->name : "";
                                 return $name;
                             },
                         ],
@@ -361,7 +358,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ],
                                     'filename' => 'mfl_facilities_export' . date("YmdHis")
                         ]);
-                      //  echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
+                        //  echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
                         echo GridView::widget([
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,

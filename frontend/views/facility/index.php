@@ -12,13 +12,18 @@ use kartik\export\ExportMenu;
 $this->title = 'Facility list';
 $this->params['breadcrumbs'][] = $this->title;
 $provinceId="";
+$districtId = "";
 
 if(!empty($_GET['MFLFacilitySearch']['province_id'])){
     $provinceId= $_GET['MFLFacilitySearch']['province_id'];
 }
+if (!empty($_GET['MFLFacilitySearch']['district_id'])) {
+    $districtId = $_GET['MFLFacilitySearch']['district_id'];
+}
+//var_dump(\backend\models\Wards::getList($districtId));
 ?>
 <div class="container-fluid">
-    <div class="row"  style="margin-right:-50px;margin-left:-50px;">
+    <div class="row"  style="margin-right:-100px;margin-left:-100px;">
         <div class="col-lg-12">
             <div class="card card-primary card-outline">
                 <div class="card-body">
@@ -62,6 +67,32 @@ if(!empty($_GET['MFLFacilitySearch']['province_id'])){
                             'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
                             'value' => function ($model) {
                                 $name = backend\models\Districts::findOne($model->district_id)->name;
+                                return $name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'constituency_id',
+                            'filterType' => GridView::FILTER_SELECT2,
+                            'filterWidgetOptions' => [
+                                'pluginOptions' => ['allowClear' => true],
+                            ],
+                            'filter' => \backend\models\Constituency::getList($districtId),
+                            'filterInputOptions' => ['prompt' => 'Filter by Constituency', 'class' => 'form-control', 'id' => null],
+                            'value' => function ($model) {
+                                $name = !empty($model->constituency_id) ? backend\models\Constituency::findOne($model->constituency_id)->name : "";
+                                return $name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'ward_id',
+                            'filterType' => GridView::FILTER_SELECT2,
+                            'filterWidgetOptions' => [
+                                'pluginOptions' => ['allowClear' => true],
+                            ],
+                            'filter' => \backend\models\Wards::getList($districtId),
+                            'filterInputOptions' => ['prompt' => 'Filter by ward', 'class' => 'form-control', 'id' => null],
+                            'value' => function ($model) {
+                                $name = !empty($model->ward_id) ? backend\models\Wards::findOne($model->ward_id)->name : "";
                                 return $name;
                             },
                         ],

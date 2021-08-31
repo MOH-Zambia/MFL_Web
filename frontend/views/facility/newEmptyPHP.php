@@ -12,7 +12,7 @@ $this->title = 'Advanced search';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
-    <div class="row"  style="margin-right:-100px;margin-left:-100px;">
+    <div class="row" style="margin-right:-100px;margin-left:-100px;">
 
         <div class="col-lg-12 text-sm">
             <div class="card card-primary card-outline">
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <p>
-                    <hr class="dotted short">
+                        <hr class="dotted short">
                     </p>
 
                     <?php
@@ -62,6 +62,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => function ($model) {
                                 $province_id = backend\models\Districts::findOne($model->district_id)->province_id;
                                 $name = backend\models\Provinces::findOne($province_id)->name;
+                                return $name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'district_id',
+                            'filterType' => GridView::FILTER_SELECT2,
+                            'filterWidgetOptions' => [
+                                'pluginOptions' => ['allowClear' => true],
+                            ],
+                            'filter' => \backend\models\Districts::getList(),
+                            'filterInputOptions' => ['prompt' => 'Filter by District', 'class' => 'form-control', 'id' => null],
+                            'value' => function ($model) {
+                                $name = backend\models\Districts::findOne($model->district_id)->name;
                                 return $name;
                             },
                         ],
@@ -157,20 +170,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'operation_status_id',
                         //'ownership_id',
                         //'ward_id',
-                        ['class' => ActionColumn::className(),
+                        [
+                            'class' => ActionColumn::className(),
                             //'options' => ['style' => 'width:130px;'],
                             'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
-                                                    '<span class="fa fa-eye"></span>', ['view', 'id' => $model->id], [
-                                                'title' => 'View facility',
-                                                'data-toggle' => 'tooltip',
-                                                'data-placement' => 'top',
-                                                'data-pjax' => '0',
-                                                'style' => "padding:5px;",
-                                                'class' => 'bt btn-lg'
-                                                    ]
+                                        '<span class="fa fa-eye"></span>',
+                                        ['view', 'id' => $model->id],
+                                        [
+                                            'title' => 'View facility',
+                                            'data-toggle' => 'tooltip',
+                                            'data-placement' => 'top',
+                                            'data-pjax' => '0',
+                                            'style' => "padding:5px;",
+                                            'class' => 'bt btn-lg'
+                                        ]
                                     );
                                 },
                             ]
@@ -313,51 +329,51 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'rating:ntext',
                         'longitude',
                         'latitude',
-                            //'comment:ntext',
-                            //'geom',
-                            //'timestamp',
-                            //'updated',
-                            //'slug',
-                            //'administrative_unit_id',
-                            //'constituency_id',
-                            //'location_type_id',
-                            //'operation_status_id',
-                            //'ownership_id',
+                        //'comment:ntext',
+                        //'geom',
+                        //'timestamp',
+                        //'updated',
+                        //'slug',
+                        //'administrative_unit_id',
+                        //'constituency_id',
+                        //'location_type_id',
+                        //'operation_status_id',
+                        //'ownership_id',
                     ];
 
 
                     if ($dataProvider->getCount() > 0) {
                         $fullExportMenu = ExportMenu::widget([
-                                    'dataProvider' => $dataProvider,
-                                    'columns' => $gridColumns2,
-                                    'columnSelectorOptions' => [
-                                        'label' => 'Cols...',
-                                    ],
-                                    'batchSize' => 200,
-                                    // 'hiddenColumns' => [0, 9],
-                                    //'disabledColumns' => [1, 2],
-                                    //'target' => ExportMenu::TARGET_BLANK,
-                                    'exportConfig' => [
-                                        ExportMenu::FORMAT_TEXT => false,
-                                        ExportMenu::FORMAT_HTML => false,
-                                        ExportMenu::FORMAT_EXCEL => false,
-                                        ExportMenu::FORMAT_PDF => false,
-                                        ExportMenu::FORMAT_CSV => false,
-                                    ],
-                                    'pjaxContainerId' => 'kv-pjax-container',
-                                    'exportContainer' => [
-                                        'class' => 'btn-group mr-2'
-                                    ],
-                                    'dropdownOptions' => [
-                                        'label' => 'Export to Excel',
-                                        'class' => 'btn btn-outline-secondary',
-                                        'itemsBefore' => [
-                                            '<div class="dropdown-header">Export All Data</div>',
-                                        ],
-                                    ],
-                                    'filename' => 'mfl_facilities_export' . date("YmdHis")
+                            'dataProvider' => $dataProvider,
+                            'columns' => $gridColumns2,
+                            'columnSelectorOptions' => [
+                                'label' => 'Cols...',
+                            ],
+                            'batchSize' => 200,
+                            // 'hiddenColumns' => [0, 9],
+                            //'disabledColumns' => [1, 2],
+                            //'target' => ExportMenu::TARGET_BLANK,
+                            'exportConfig' => [
+                                ExportMenu::FORMAT_TEXT => false,
+                                ExportMenu::FORMAT_HTML => false,
+                                ExportMenu::FORMAT_EXCEL => false,
+                                ExportMenu::FORMAT_PDF => false,
+                                ExportMenu::FORMAT_CSV => false,
+                            ],
+                            'pjaxContainerId' => 'kv-pjax-container',
+                            'exportContainer' => [
+                                'class' => 'btn-group mr-2'
+                            ],
+                            'dropdownOptions' => [
+                                'label' => 'Export to Excel',
+                                'class' => 'btn btn-outline-secondary',
+                                'itemsBefore' => [
+                                    '<div class="dropdown-header">Export All Data</div>',
+                                ],
+                            ],
+                            'filename' => 'mfl_facilities_export' . date("YmdHis")
                         ]);
-                      //  echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
+                        //  echo "<p class='text-sm'>Found " . $dataProvider->getCount() . " search record(s)</p>";
                         echo GridView::widget([
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
@@ -366,7 +382,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
                             'panel' => [
                                 'type' => GridView::TYPE_DEFAULT,
-                            // 'heading' => '<h3 class="panel-title"><i class="fas fa-book"></i> Library</h3>',
+                                // 'heading' => '<h3 class="panel-title"><i class="fas fa-book"></i> Library</h3>',
                             ],
                             // set a label for default menu
                             'export' => false,
@@ -391,4 +407,3 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
-
